@@ -1,0 +1,148 @@
+@charset "utf-8";
+
+/* ------------------------------------------------------------
+   
+	filename:	type-a.css
+	created:	081230
+	update:		081230
+	copyright:	(c)2008 kazuwaya All rights reserved.
+	  
+------------------------------------------------------------ */
+
+/* ------------------------------------------------------------ ボディー */
+body { background-color: #D6D6D6; }
+
+a:hover { text-decoration: none; }
+
+/* ------------------------------------------------------------ ヘッダ */
+div#header ul#globalNav,
+div#header p#search {
+	border: none;
+	background-color: #333;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+div#header ul#globalNav { border: none; }
+
+/* グロナビ */
+div#header ul#globalNav { margin-bottom: 1px; }
+
+div#header ul#globalNav li a {
+	color: #FFF;
+	margin: 0;
+}
+
+div#header ul#globalNav li:first-child a {
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+}
+
+div#header ul#globalNav li a:hover,
+div#header ul#globalNav li.current a { background-color: #256EA1; }
+
+/* ------------------------------------------------------------ ツールバー */
+div#mainContents div.toolBar,
+div#mainContents div.inner,
+div#mainContents div#function,
+div#subContents div#menu {
+	border: none;
+	background-image: none;
+	background-color: #FFF;
+}
+
+div#mainContents div.toolBar {
+	background-color: #999;
+	min-height: 25px;
+}
+
+* html div#mainContents div.toolBar { height: 29px; }
+
+div#mainContents div.toolBar ul#tab li a {
+	border: none;
+	background-color: #CCC;
+}
+
+div#mainContents div.toolBar ul#tab li.current a {
+	border-bottom: none;
+	background-color: #FFF;
+}
+
+div#mainContents div.inner {
+	margin-bottom: 1px;
+	-moz-border-radius-bottomright: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	padding-bottom: 1px;/* 背景が下まで伸びない */
+}
+
+div#mainContents div#function,
+div#subContents div#menu {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+
+div#subContents div#menu { margin-bottom: 1px; }
+
+p.btn,
+div#mainContents div.toolBar dl.tool dt { border: 1px solid #333; }
+
+div#mainContents div.toolBar p.backNav { margin-top: 2px; }
+
+div#mainContents p.backNav { text-align: right; }
+
+div#mainContents p.backNav a {
+	background-image: url(../../images/bg-mark-back.gif);
+	background-position: left 2px;
+	background-repeat: no-repeat;
+	padding-left: 12px;
+}
+
+div#mainContents div.toolBar p.backNav a { color: #FFF; }
+
+/* ------------------------------------------------------------ サブコンテンツ */
+div#subContents,
+div#subContents div#newPage { border: none; }
+
+div#subContents div#newPage,
+div#subContents div.inner {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	background-color: #FFF;
+}
+
+div#subContents div#newPage { margin-bottom: 1px; }
+
+/* ------------------------------------------------------------ コンテナ */
+div#mainContents h2 {
+	background-color: #EFEFEF;
+	color: #C90066;
+	border: none;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-bottom: 2px solid #CCC;
+	background-image: url(../../images/bg_h2.png);
+	background-position: left top;
+	background-repeat: repeat-y;
+}
+
+div#mainContents h2 a { color: #C90066; }
+
+div#subContents h2 { color: #C90066; }
+
+div#mainContents h3 {
+	padding: 0 8px;
+	background-image: url(../../images/bg_h3.png);
+	background-position: left top;
+	background-repeat: repeat-y;
+}
+
+div#subContents p.date {
+	margin-bottom: 0;
+	color: #999;
+}
+/* EOF */

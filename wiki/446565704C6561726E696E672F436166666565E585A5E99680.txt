@@ -1,0 +1,110 @@
+*インストール手順は
+[[DeepLearning/Caffee]]
+
+*Deep Q-Networkとは
+Deep Q-Networkとは、2013年に提唱された機械学習のアルゴリズムの一つ。
+行動価値関数Q(s, a)を深層ニューラルネットワークに近似するというもの。
+
+*BVLC(Berkeley Vision and Learning Center)とは
+Caffeを開発してる研究所
+
+*LSVRC(Large Scale Visual Recognition Challenge)
+毎年開かれてる人工知能の世界大会
+ここ2年はディープラーニングが圧倒的な強さ
+去年はGoogleが初出場ながらディープラーニングでぶっちぎりの優勝
+
+*Caffeの構成
+|   caffe/model/ |   リファレンスモデル    |
+|   caffe/data/   |    モデル関連データ      |
+|   caffe/python/|   python関連のファイル|
+
+*Caffeのサンプル
+[[古いチュートリアル:http://techblog.yahoo.co.jp/programming/caffe-intro/]]
+[[新しいチュートリアル:http://qiita.com/Bonnnou_108/items/41e6dadeff1310b4eb5d]]
+
+**モデルダウンロード
+LSVRC2012の時の学習済リファレンスモデルを配布しているので、まずはそれをダウンロード。
+#sh(bash){{
+more caffe/models/bvlc_reference_caffenet/readme.md
+}}
+を確認してみると、[[学習済みモデル:http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel]]でダウンロードできる。と書いてある。
+これをダウンロードして、
+#sh(bash){{
+caffe/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel
+}}
+として保存する。
+~
+
+**モデル関連データの入手
+モデル関連データでダウンロード&解凍すべきものが既にシェルスクリプトでまとめて書かれてるので、
+#sh(bash){{
+./caffe/data/ilsvrc12/get_ilsvrc_aux.sh
+}}
+を実行してダウンロード。
+これを実行すると、LSVRC2012の時のデータ一式が揃う。
+|synset.txt                   |       分類グループの番号(1000個)     |
+| det_synset_words.txt  |  分類グループのグループ名(1000個) |
+~
+
+**classipy.pyを実行
+caffe/pythonに移動して、用意されてる画像分類器のclassify.pyをたたく。
+#sh(bash){{
+cd caffe/python/
+python classify.py --raw_scale 255 ./imagefile ./result.npy
+}}
+このclassify.pyの中で、caffe/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel
+というモデルを読みに行く処理がすでに書かれているので、モデルがあれば実行できる。
+imageファイルを指定して、分類結果をカレントの./result.npyに出力する処理
+~
+
+**io.pyエラー
+caffeのバージョンが新しいと起こるので、io.pyを手動で編集して古いバージョンの書き方に変える。
+#sh(bash){{
+sulb caffe/python/caffe/io.py
+}}
+を編集して、
+#sh(bash){{
+#この2行を消す
+-if ms != self.inputs[in_][1:]:
+-    raise ValueError('Mean shape incompatible with input shape.')
+
+#この6行を加える
++if ms != self.inputs[in_][1:]:
++    print(self.inputs[in_])
++    in_shape = self.inputs[in_][1:]
++    m_min, m_max = mean.min(), mean.max()
++    normal_mean = (mean - m_min) / (m_max - m_min)
++    mean = resize_image(normal_mean.transpose((1,2,0)),in_shape[1:]).transpose((2,0,1)) * (m_max - m_min) + m_min
+}}
+~
+
+**結果の表示
+以上でresult.npyという分類結果が出力されるが、これはbinファイルのため読みにくい。
+これの解読専用のpythonスクリプトshow_result.pyを作って、以下を書き込んで保存する。
+#sh(python){{
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys, numpy
+
+categories = numpy.loadtxt(sys.argv[1], str, delimiter="\t")
+scores = numpy.load(sys.argv[2])
+top_k = 3
+prediction = zip(scores[0].tolist(), categories)
+prediction.sort(cmp=lambda x, y: cmp(x[0], y[0]), reverse=True)
+for rank, (score, name) in enumerate(prediction[:top_k], start=1):
+    print('#%d | %s | %4.1f%%' % (rank, name, score * 100))
+}}
+~
+
+これを実行すれば、分類結果と確率が表示される。ちなみにこのスクリプトでは、
+指定した単語帳(synset_words.txt)と分類結果のバイナリ(result.npy)を対応させて表示してるだけ。
+#sh(bash){{
+python show_result.py caffe_home/data/ilsvrc12/synset_words.txt result.npy
+}}
+~
+
+このサンプルリファレンスモデルでは1000個のカテゴリしかなく、
+どんな画像を入力してもCaffeの実行では最も確率の高いモデルに分類されるだけ。
+ゆえに自分で学習データを揃えて専用のリファレンスモデルを作ったほうが良い。
+画像を揃えるのが大変な時は、Caffeの中間層の出力(特徴のニューロンの状態)を画像特徴として使うと、
+手軽に高精度な分類を追加できる。

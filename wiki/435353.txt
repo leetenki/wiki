@@ -1,0 +1,530 @@
+#contents
+
+*CSSとは
+[[CSSデザインチュートリアル:http://ja.learnlayout.com/]]
+Cascading Style Sheetsの略。見栄えのスタイルを定義するための言語。
+Twitter Bootstrapを使うと、既に用意されてる美しいCSSがあるので、デザインが楽。
+~
+*CSSの書き方
+#sh(css){{
+セレクタ: {
+    プロパティ: 値;
+}
+}}
+セレクタは、適用範囲の事。タグ名や、class、idなどを指定。
+プロパティは、スタイルの種類、値はスタイルによって異なる。
+値の後には必ず;をつける。
+~
+
+**CSSの適用方法
+1、head内にstyleタグを作って直接書き込む
+#sh(html){{
+<head>
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+}}
+~
+2、タグのstyle属性に直接書き込む
+#sh(html){{
+<p style="color: green; font-size: 10px;">あいうえお</p>
+}}
+~
+
+３、linkタグで外部cssファイルを読み込む。htmlファイルとcssファイルを分離したほうが良いので、こうするべき。
+#sh(html){{
+<head>
+    <link rel="stylesheet" type="text/css" href="test.css"/>
+</head>
+}}
+~
+
+**CSSの順序
+基本的に下に書いたもののほうが優先される。
+ただし、同じタグでも、より詳細に記述されてるもののほうが優先順位高い。
+*セレクタの書き方
+**タグ指定
+タグ指定で、同じタグ全てに適用
+#sh(html){{
+html {
+    color: green;
+}
+}}
+~
+
+**ID指定
+id指定で単一の特定の範囲のみ適用、タグ名省略可
+IDをタグに付ける時は、基本的に唯一無二のIDを付けるべき。
+#sh(html){{
+div#idLee {
+    color: red;
+}
+
+#idLee {
+    color: red;
+}
+}}
+~
+
+**Class指定
+class指定で同一クラスのグループ全部に適用、タグ名省略可
+#sh(html){{
+div.classLee {
+    color: green;
+}
+
+.classLee {
+    color: green;
+}
+}}
+~
+
+**ワイルドカード
+全てのタグを初期化する時に使う。
+#sh(html){{
+* {
+   margin: 0px;
+   padding: 0px;
+}
+}}
+~
+
+**hover等の疑似要素
+要素で指定した条件下の時のみ適用。
+#sh(html){{
+セレクタ:疑似要素 {
+    プロパティ: 値;
+}
+p:hover {
+    color: red;
+}
+}}
+~
+
+**before、after疑似要素
+beforeはその要素の直前に挿入する別のタグ(contentes)、afterはその要素の直後。
+元々の要素がブロックレベルならbeforeやafterで挿入する要素もブロックレベル。
+元々の要素がインラインなら、挿入されるのもインライン。contentで指定した要素(タグ)が挿入される。
+contentに文字列を渡せば<div>text<div>として挿入され、url("img/mouse.png");を渡せば<img/>として挿入される。
+#sh(css){{
+p:before {
+    content: url("img/mouse.png");
+}
+
+p:after {
+    content: "...ここまで";
+    font-size:0.75em;
+}
+}}
+~
+
+**セレクタ複数指定
+複数のセレクタに同じスタイルを適用
+#sh(html){{
+div, p {
+   color: red;
+}
+}}
+~
+
+**子孫セレクタ(入れ子条件)
+親セレクタの中にある子セレクタのみに適用。
+子セレクタが他の場所で独立していたら適用されない。
+#sh(html){{
+親セレクタ 子セレクタ {
+    color: red;
+}
+
+<div>
+    <ol>
+        <li>
+        </li>
+    </ol>
+</div>
+
+div li {
+    color: red;
+}
+}}
+~
+
+**子限定セレクタ
+子セレクタが親セレクタの直下(直属の1層下)の時のみに適用させる時は
+#sh(html){{
+親セレクタ > 子セレクタ {
+    color: red;
+}
+
+<div>
+    <ol>
+        <li>
+        </li>
+    </ol>
+</div>
+
+div > ol {
+    background-color: sky-blue;
+}
+}}
+~
+
+**隣接条件
+直前の隣接セレクタがセレクタ1の場合のみ、セレクタ2に適用される。
+#sh(html){{
+セレクタ1 + セレクタ2 {
+    color: red;
+}
+
+<div></div>
+<p></p>
+
+ div + p {
+    color: blue;
+}
+}}
+~
+
+*CSSのボックスモデル
+CSSはセレクタで選択した各要素を、'''１つのボックス'''として認識してる。
+spanのようなinline要素なら最小限の大きさのボックス、divのようなblock要素なら端から端までが1つのボックスになる。
+ボックスの外側にmargin、ボックスの内側にpaddingがあり、paddingの内側がコンテンツエリア。
+コンテンツエリア内には別のタグ(ボックス)が入る。
+#ref(Ruby/TechAcademy/Lesson1/margin1.png,center,100%)
+~
+*プロパティと値
+**color、background-color
+colorプロパティなどで指定できる色の表現方法は様々。
++red、blue、green、grayなど言葉で表現。
++#FFFの三桁16進数
++#ffffffの6桁16進数
++rgba(255, 255, 255, 1)
+~
+
+**font-size
+フォントの大きさ指定。pxや%やemなどの指定ができる。
+pxはピクセル数。
+~
+
+
+**font-family
+何種類ものフォントを連ねて指定できる。
+表示できるフォントは個々のPCやブラウザが表示できるフォントに依存するので、
+ここに大量に書いておけば、左から順番読み込んでブラウザで表示できるか試してくれる。
+左のほうが優先順が高い。
+#sh(html){{
+body {
+  font-size: 14px;
+  font-family: YuGothic, "游ゴシック", "メイリオ", Meiryo, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", sans-serif;
+}
+}}
+~
+
+**display
+block、inline、inline-blockなどの、要素の定義を書き換える
+inline-blockは、見せ方をinline(端から端までではなく、最小限の領域)に変更し、ネスト内での影響力をblockとする。
+#sh(html){{
+nav ul li {
+   display: inline-block;
+}
+}}
+~
+
+**margin → border → padding
+marginは外側の余白、
+borderはmarginとpaddingの境界線
+paddingは内側の余白
+marginとpaddingは上下左右それぞれ指定しても、一括で指定してもOK
+#sh(html){{
+div {
+    /*  上下左右とれぞれ指定するやり方  */
+    margin-top: 10px;
+    margin-right: 20px;
+    margin-bottom: 30px;
+    margin-left: 40px;
+
+    /* 上下左右それぞれ指定する省略形  */
+    margin: 10px 20px 30px 40px;
+
+    /* 上下と左右の2回だけ指定する */
+    margin: 100px 200px;
+
+    /*  上下左右まとめて同じ分だけ指定 */
+    margin: 50px;
+}
+}}
+~
+HTMLはブラウザがデフォでbodyにもheadにもmarginとpaddingを入れるので、最初に全消去する手法が使われる。
+#sh(css){{
+* {
+   margin: 0;
+   padding: 0;
+}
+}}
+~
+
+**text-align
+あるCSS'''ボックス領域内のコンテンツ'''のみの位置を調整。
+center、right、left、top、bottomを指定する。
+#sh(html){{
+<div>
+    <img src="..." alt="..."/>
+</div>
+
+div {
+   text-align: center;
+}
+}}
+この場合、div内のコンテンツは全てセンタリングされるので、画像も中央寄りになる。
+~
+
+**text-decoration
+テキストに上線、下線、打ち消し線を付ける
+noneはスタイルなし。
+underlineは下線。
+overlineは上線。
+line-throughは打ち消し線。
+blinkは点滅。
+#sh(css){{
+a {
+    text-decoration: none;
+    text-decoration: underline;
+    text-decoration: overline;
+    text-decoration: line-through;
+    text-decoration: blink;
+}
+}}
+~
+
+**font-weight
+タグないコンテンツの、文字の太さ
+#sh(css){{
+a {
+    font-weight: bold;
+}
+}}
+~
+
+
+**background-image
+borderより内側に画像を生成。paddingは画像領域に含まれる。marginは含まれない。
+※通常のimgタグにmarginとpaddingを設定する場合、imgはpaddingの内側になるが、backgroundの場合は特殊
+background-imageに画像のURL指定。画像ファイルのパーミションに気をつける。
+background-positionに横と縦の位置を指定。left right top bottom
+background-sizeにcoverを入れると、アスペクト比を維持したまま、背景領域を覆うように幅いっぱい広げてくれる。
+background-repeatをno-repeatにすると、繰り返しをなくす。
+
+#sh(css){{
+header {
+    background-image: url("bg.jpg");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+}}
+~
+
+
+**丸角border
+max-widthとmax-heightは、borderを丸めたあとのboudingboxの幅と高さの上限。必ずこれ以下になる。
+borderはボーダーラインの太さ、solidかdottedか、色。
+border-radiusを100%にすると完全な円になる。
+border-radius: 20% 20% 20% 50%;のように、左上、右上、右下、左下の順に単独指定も可能
+#sh(css){{
+img {
+	max-width: 400px;
+	max-height: 400px;
+	border: 5px solid #ffffff;
+	border-radius: 100%;
+}
+}}
+~
+
+**letter-spacing
+文字と文字の間隔。px指定もできるがemが一般的。
+1em=1文字分なので、0.2emとか指定すると、文字と文字の間隔が0.2文字分になる。
+#sh(css){{
+h1 {
+   letter-spacing: 0.15em;
+}
+}}
+~
+
+**text-shadow
+右側の影、下側の影、影のぼかし具合(丸め具合)、影の色
+という4値を指定する。
+#sh(css){{
+h1 {
+    text-shadow: 1px 1px 1px #000;
+}
+}}
+~
+
+**width、height
+ボックスモデルはmarginの内側にborderがあり、borderの内側にpaddingがある。paddingの内側にコンテンツがある
+このwidthとheightはコンテンツの幅と高さになるので、実際の表示では、
+300×300のコンテンツ領域の外側に50×2のpaddingがあって、その外側に10×2のborderが表示されるので、
+borderの外側から計ったら420×420のボックスになる。
+#sh(css){{
+div {
+   width: 300px;
+   height:300px;
+   padding: 50px;
+   border: 10px;
+}}
+}
+~
+
+**box-sizing
+box-sizing:border-boxという指定をすると、widthとheightの適用範囲が、paddingの内側ではなく、
+borderの外側が基準になる。全要素に適用させておくと、直感的に扱いやすくなる。
+#sh(css){{
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+}}
+~
+
+ **max-width、max-height
+通常のwidthとheightだと大きさ固定されるので、携帯で開く時でも小さく縮めてくれない。
+ゆえにHTML5ではmax-widthとmax-heightを推奨してる。画面が小さくなった時に自動でそれ以下に収まってくれる。
+#sh(css){{
+div {
+    max-width:100px;
+    max-height: 100px;
+}
+}}
+~
+
+**margin:auto
+ブロックレベル要素にmax-widthを指定すると、横幅は画面いっぱいではなく、決められた大きさ以下になってくれる。
+marginをautoとする事で上下左右中央に来るようになる。autoを複数指定して、上下、左右を個別で指定してもOK
+ちなみにmargin: -100pxという負を値を指定すると、上の要素の領域にはみ出る。
+#sh(css){{
+div.container {
+    max-width: 500px;
+    margin:  -100px auto 0;
+}
+}}
+~
+
+*CSS3新機能
+**@media
+メディアクエリー
+表示デバイスごとにスタイルシートを適用させる機能
+この場合、画面サイズが、最大768px以下になった時点で適用されはじめる。
+#sh(css){{
+@media (max-width: 768px) {
+    body {
+        font-size: 12px;
+    }
+    h1 {
+        font-size: 30px;
+    }
+    h2 {
+        font-size: 24px;
+    }
+    .panel-title {
+        font-size: 14px;
+    }
+}
+}}
+~
+
+*SCSS
+CSSを扱いやすくした言語。コメント文//も可能
+.scss拡張しのファイル。そのままではブラウザに読み込めないけれど、一度cssに変換するコンパイラを通せば良い
+[[SCSSコンパイラ:http://css2sass.herokuapp.com/]]
+~
+**ネスト構造
+通常のプログラミング言語みたいにネスト構造で書ける。
+#sh(css){{
+div {
+  background-color: gray;
+
+  /* 子孫セレクタ */
+  p {
+    color: green;
+
+    /* 擬似クラス */
+    &:hover {
+      color: red;
+    }
+  }
+
+  /* 子セレクタ */
+  > p {
+    color: blue;
+  }
+
+  /* 隣接セレクタ */
+  + p {
+    color: violet;
+  }
+}
+}}
+~
+
+**変数
+変数が使えるので、同じ値を使い回す時に便利。
+#sh(css){{
+$myblue: #3bbfce;
+
+p {
+  color: $myblue;
+}
+
+li {
+  color: $myblue;
+}
+}}
+~
+
+**mixin、include
+変数では値しか代入できないが、１つのスタイル{...}を丸ごと1つの値に代入する時にmixinを使う。includeで展開する。
+#sh(css){{
+@mixin p-base {
+  background-color: gray;
+  color: blue;
+}
+
+p {
+  @include p-base;
+}
+
+li {
+  @include p-base;
+}
+}}
+~
+
+**mixinで関数定義
+mixinで、呼び出し時に決まる引数受け渡しを定義する事も可能
+#sh(css){{
+@mixin p-base($color) {
+  background-color: gray;
+  color: $color;
+}
+
+p {
+  @include p-base(blue);
+}
+
+li {
+  @include p-base(green);
+}
+}}
+~
+
+**import
+外部ファイルのcssやscssをモジュールとして読み込める
+#sh(css){{
+@import "style.css";
+@import "style.scss";
+}
+}}
+~

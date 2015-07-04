@@ -1,0 +1,590 @@
+@charset "utf-8";
+
+/* ------------------------------------------------------------
+
+	filename:	layout.css
+	created:	061219
+	update:		091117
+	copyright:	(c)2008 kazuwaya All rights reserved.
+	
+------------------------------------------------------------ */
+
+/* ------------------------------------------------------------ プラットフォーム */
+body { text-align: center; }
+
+div#platform {
+	width: 960px;
+	height: auto;
+	margin: 0 auto;
+	text-align: left;
+}
+
+ul#skipNavi { display: none; }
+
+div#header,
+div#mainContents,
+div#subContents,
+div#footer { margin-bottom: 16px; }
+
+/* ------------------------------------------------------------ ヘッダ */
+div#header { position: relative; }
+
+/* -------------------- サイトID */
+div#header h1#siteId,
+div#header p#siteId {
+	float: left;
+	text-align: left;
+	font-size: 0;
+	padding: 12px 0;
+}
+
+/* -------------------- リモートナビ */
+div#header ul#remoteNav {
+	text-align: right;
+	padding-top: 12px;
+}
+
+div#header ul#remoteNav li {
+	display: inline;
+	font-size: 120%;
+	margin-left: 16px;
+}
+
+/* -------------------- グローバルナビ */
+div#header ul#globalNav {
+	clear: both;
+	border: 1px solid #000;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-topleft: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-top-left-radius: 4px;
+}
+
+div#header ul#globalNav li {
+	float: left;
+	border-right: 1px solid #000;
+}
+
+div#header ul#globalNav li a {
+	display: block;
+	padding: 2px 12px;
+	margin: 2px;
+}
+
+div#header ul#globalNav li a:hover { background-color: #EEE; }
+
+/* -------------------- 検索 */
+div#header p#search {
+	border: 1px solid #000;
+	border-top: none;
+	text-align: center;
+	padding: 8px 160px;
+	-moz-border-radius-bottomright: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+}
+
+div#header p#search input.txt { max-width: 642px; }
+
+* html div#header p#search input { vertical-align: bottom; }
+*:first-child+html div#header p#search input { vertical-align: bottom; }
+
+/* -------------------- 文字サイズ */
+div#header dl#fontSize {
+	position: absolute;
+	right: 16px;
+	bottom: 10px;
+	background-color: #666;
+	padding: 1px 1px 1px 8px;
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+}
+
+* html div#header dl#fontSize { top: 74px; }
+
+div#header dl#fontSize dt,
+div#header dl#fontSize dd,
+div#header dl#fontSize dd ul li {
+	float: left;
+	line-height: 0;
+}
+
+div#header dl#fontSize dt { margin-top: 3px; }
+
+div#header dl#fontSize dt img { vertical-align: top; }
+
+div#header dl#fontSize dd ul { margin: 0 0 0 8px; }
+
+div#header dl#fontSize dd ul li {
+	background-image: url(../images/bg-fontchange.png);
+	background-position: left top;
+	background-repeat: no-repeat;
+	text-indent: -9999px;
+	height: 16px;
+	width: 23px;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+div#header dl#fontSize dd ul li#fontS {
+	background-position: 0 0;
+	width: 24px;
+}
+
+div#header dl#fontSize dd ul li#fontM { background-position: -24px 0; }
+
+div#header dl#fontSize dd ul li#fontL { background-position: -47px 0; }
+
+/* ------------------------------------------------------------ メインコンテンツ */
+div.typeD div#mainContents {
+	float: right;
+	width: 752px;
+}
+
+div#mainContents div.inner {
+	border: 1px solid #000;
+	border-top: none;
+	min-height: 392px;
+	padding-top: 16px;
+}
+
+* html div#mainContents div.inner { height: 392px; }
+
+div#mainContents div.inner,
+div#mainContents div#function { padding-left: 16px; }
+
+/* -------------------- ツールバー */
+/* レイアウト */
+div#mainContents div.toolBar p,
+div#mainContents div.toolBar ul,
+div#mainContents div.toolBar ul li,
+div#mainContents div.toolBar dl,
+div#mainContents div.toolBar dl dt,
+div#mainContents div.toolBar dl dd {
+	margin: 0;
+	padding: 0;
+	background-image: none;
+}
+
+div#mainContents div.toolBar {
+	padding-top: 4px;
+	border-bottom: none;
+	background-image: url(../images/bg-toolbar.gif);
+	background-position: left bottom;
+	background-repeat: repeat-x;
+	border: 1px solid #000;
+	border-bottom: none;
+	min-height: 27px;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-topleft: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-top-left-radius: 4px;
+}
+
+* html div#mainContents div.toolBar { height: 27px; }
+
+div#mainContents div.toolBar ul#tab { margin-left: 16px; }
+
+div#mainContents div.toolBar ul#tab li {
+	float: left;
+	margin-right: 4px;
+}
+
+div#mainContents div.toolBar p.btn,
+div#mainContents div.toolBar dl#tools {
+	margin-right: 16px;
+	display: inline;
+}
+
+div#mainContents div.toolBar p.btn { float: right; }
+
+/* タブ */
+div#mainContents div.toolBar ul#tab li a {
+	display: block;
+	border: 1px solid #000;
+	padding: 2px 12px 5px 12px;
+	background-color: #FFF;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-topleft: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-top-left-radius: 4px;
+}
+
+div#mainContents div.toolBar ul#tab li.current a {
+	border-bottom: 1px solid #EEE;
+	background-color: #EEE;
+}
+
+div#mainContents div.toolBar ul#tab li a:hover { background-color: #EFEFEF; }
+
+div#mainContents div.toolBar ul#tab li.current a:hover { background-color: #EEE; }
+
+/* ボタン共通 */
+p.btn,
+div#mainContents div.toolBar dl#tools dt {
+	border: 1px solid #000;
+	background-color: #FFF;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+
+p.btn a,
+div#mainContents div.toolBar dl#tools dt span {
+	display: block;
+	padding: 0 12px;
+	margin: 1px;
+	background-image: url(../images/bg-btn.gif);
+	background-position: right top;
+	background-repeat: repeat-x;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	background-color: #D5D5D5;
+}
+
+* html p.btn a,
+* html div#mainContents div.toolBar dl#tools dt span {
+	margin: 0;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+div#mainContents div.toolBar dl#tools dt span {
+	background-image: url(../images/bg-btn-pulldown.gif);
+	padding: 0 24px 0 12px;
+}
+
+/* ツール */
+div#mainContents div.toolBar dl#tools {
+	float: right;
+	position: relative;
+	z-index: 99;
+}
+
+* html div#mainContents div.toolBar dl#tools dt span {
+	width: 6.5em;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+div#mainContents div.toolBar dl#tools dd {
+	border: 1px solid #000;
+	display: none;
+	position: absolute;
+}
+
+div#mainContents div.toolBar dl#tools dd ul li a {
+	display: block;
+	padding: 4px 13px;
+	width: 8em;
+	background-color: #000;
+	color: #FFF;
+}
+
+div#mainContents div.toolBar dl#tools dd ul li a:hover {
+	background-color: #EEE;
+	color: #333;
+}
+
+div#mainContents div.toolBar dl#tools:hover dt,
+* html div#mainContents div.toolBar dl#tools.hover dt {
+	background-color: #000;
+	border-color: #000;
+	-moz-border-radius-bottomright: 0;
+	-moz-border-radius-bottomleft: 0;
+	-webkit-border-bottom-right-radius: 0;
+	-webkit-border-bottom-left-radius: 0;
+}
+
+div#mainContents div.toolBar dl#tools:hover dt span,
+* html div#mainContents div.toolBar dl#tools.hover dt span {
+	background-image: none;
+	background-color: #000;
+	color: #FFF;
+}
+
+div#mainContents div.toolBar dl#tools:hover dd,
+* html div#mainContents div.toolBar dl#tools.hover dd { display: block; }
+
+/* 一つ前のページに戻る */
+div#mainContents div.toolBar p.backNav {
+	text-align: right;
+	margin-right: 16px;
+}
+
+/* 最終更新日 */
+div#mainContents p#lastModified { text-align: right; }
+
+/* ------------------------------------------------------------ 機能エリア */
+div#mainContents div#function {
+	border: 1px solid #000;
+	border-top: none;
+	background-color: #EFEFEF;
+	padding-top: 8px;
+	padding-bottom: 1px;/* 背景がでないため */
+}
+
+div#mainContents div#function dl#relatedLinks,
+div#mainContents div#function dl#share { clear: both; }
+
+div#mainContents div#function dl#relatedLinks dt {
+	width: 2.5em;
+	float: left;
+}
+
+div#mainContents div#function dl#relatedLinks dd { margin-left: 3em; }
+
+div#mainContents div#function dl#relatedLinks dd,
+div#mainContents div#function dl#share dd { border: none; }
+
+div#mainContents div#function dl#share dt { display: inline; }
+
+div#mainContents div#function dl#share dd {
+	display: inline;
+	padding: 0;
+}
+
+div#mainContents div#function dl#share dd ul { display: inline; }
+
+div#mainContents div#function dl#share dd ul li {
+	display: inline;
+	background-image: none;
+	padding-left: 0;
+}
+
+div#mainContents div#function p#pageurl { clear: both; }
+
+div#mainContents div#function p#pageurl input {
+	max-width: 100%;
+	width: 48em;
+}
+
+/* ------------------------------------------------------------ サブコンテンツ */
+div#subContents {
+	width: 192px;
+	float: left;
+	border: 1px solid #000;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-topleft: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-top-left-radius: 4px;
+}
+
+div#subContents div#newPage { border-bottom: 1px solid #000; }
+
+div#subContents div#newPage { padding: 4px 8px; }
+
+div#subContents div#menu { padding: 8px; }
+
+div#subContents div#newPage p.btn {
+	text-align: center;
+	margin-bottom: 8px;
+	font-size: 120%;
+}
+
+div#subContents div#newPage p { font-size: 100%; }
+
+div#subContents h2 {
+	margin-bottom: 4px;
+	margin-top: 16px;
+}
+
+div#subContents h2:first-child { margin-top: 0; }
+
+div#subContents h3 { margin-bottom: 0; }
+
+div#subContents h4,
+div#subContents h5,
+div#subContents h6,
+div#subContents p,
+div#subContents ul { margin-bottom: 4px; }
+
+div#subContents ul li { overflow: hidden; }
+
+* html div#subContents ul li { overflow: visible; }
+
+*:first-child+html div#subContents ul li { overflow: visible; }
+
+/* ------------------------------------------------------------ フッタ */
+div#footer {
+	clear: both;
+	border-bottom: none;
+	background-color: #000;
+	padding: 8px 0;
+	-moz-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+div#footer ul { margin-top: 10px; }
+
+div#footer ul li {
+	float: left;
+	margin: 0;
+	margin-right: 0.5em;
+	padding-right: 0.5em;
+	font-size: 100%;
+}
+
+div#footer address { font-size: 100%; }
+
+div#footer p,
+div#footer address {
+	margin: 0 16px;
+	color: #FFF;
+	font-size: 100%;
+}
+
+p#goToTop {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+}
+
+* html p#goToTop { display: none; }
+
+div#footer p strong { font-weight: normal; }
+
+/* ------------------------------------------------------------ マージン */
+div#mainContents h1 { margin: 0 8px 8px 8px; }
+
+div#mainContents h2 { margin: 32px 16px 8px 0; }
+
+div#mainContents h3 { margin: 16px 16px 8px 0; }
+
+div#mainContents h4 { margin: 0 16px 4px 0; }
+
+div#mainContents h5,
+div#mainContents h6 { margin: 0 16px 8px 0; }
+
+/* -------------------- ロケータがある場合  */
+div#mainContents div.locator h2:first-child,
+div#mainContents div.locator + h2 { margin-top: 24px; }
+
+div#mainContents div.locator h3:first-child,
+div#mainContents div.locator + h3 { margin-top: 8px; }
+
+/* -------------------- 見出しが連続する場合 */ 
+div#mainContents h2 + div.locator h3:first-child,
+div#mainContents h2 + h3 { margin-top: 0; }
+
+/* -------------------- ie対応 */
+* html div#mainContents h2.siblingA { margin-top: 24px; }
+
+* html div#mainContents h3.firstChild,
+* html div#mainContents h3.siblingA { margin-top: 8px; }
+
+* html div#mainContents h3.siblingB,
+* html div#mainContents p.siblingB { margin-top: 0; }
+
+/* -------------------- 本文 */
+div#mainContents p,
+div#mainContents ul,
+div#mainContents ol,
+div#mainContents dl { margin: 0 24px 16px 8px; }
+
+div#mainContents pre,
+div#mainContents blockquote { margin: 0 16px 16px 0; }
+
+div#mainContents pre,
+div#mainContents blockquote { overflow: auto; }
+
+* html div#mainContents pre,
+* html div#mainContents blockquote { width: 100%; }
+
+div#mainContents div#function p,
+div#mainContents div#function ul,
+div#mainContents div#function ol,
+div#mainContents div#function dl { margin: 0 16px 8px 0; }
+
+div#mainContents hr { margin: 16px 16px 16px 0; }
+
+* html div#mainContents hr { margin: 25px 16px 9px 0; }/* IEはデフォルトで上下に7pxマージンがある*/
+
+div#mainContents table { margin: 0 0 16px 0; }
+
+div#mainContents ul ul,
+div#mainContents ul ol,
+div#mainContents ol ul,
+div#mainContents ol ol,
+div#mainContents dl dd p,
+div#mainContents dl dd ul,
+div#mainContents dl dd ol,
+div#mainContents dl dd table,
+div#mainContents table p,
+div#mainContents table ul,
+div#mainContents table ol,
+div#mainContents table dl {
+	margin-bottom: 0;
+	margin-left: 0;
+}
+
+div#mainContents table p.lastChild,
+div#mainContents table ul.lastChild,
+div#mainContents table ol.lastChild,
+div#mainContents table dl.lastChild { margin-bottom: 0; }
+
+/* -------------------- テーブル */
+div#mainContents table { width: 720px; }
+
+div#mainContents dl dd table { width: 100%; }
+
+/* -------------------- フォーム */
+input { padding: 1px; }
+
+div#mainContents textarea { width: 100%; }
+
+/* ------------------------------------------------------------ フローティングレイヤー */
+div#platformF { display: none; }
+
+div#floatNewPage p {
+	text-align: center;
+	margin-top: 24px;
+}
+
+/* ------------------------------------------------------------ プリント */
+@media print {
+
+/* -------------------- プリントIE対応*/
+* html body { zoom: 67%; }
+
+/* -------------------- 全般 */
+* { page-break-before: avoid; }
+}
+
+/* ------------------------------------------------------------ クリアフィックス */
+div#utilities:after,
+div#utilities p.topicPath:after,
+div#mainContents div.toolBar:after,
+div#header ul#remoteNav:after,
+div#header ul#globalNav:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+div#utilities,
+div#utilities p.topicPath,
+div#mainContents div.toolBar,
+div#header ul#remoteNav,
+div#header ul#globalNav { display: inline-table; }
+
+* html div#utilities,
+* html div#utilities p.topicPath,
+* html div#mainContents div.toolBar,
+* html div#header ul#remoteNav,
+* html div#header ul#globalNav { height: 1%; }
+
+div#utilities,
+div#utilities p.topicPath,
+div#mainContents div.toolBar,
+div#header ul#remoteNav,
+div#header ul#globalNav {
+	display: block;
+	zoom: 1;
+}
+
+/* EOF */

@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+/* ------------------------------------------------------------
+
+	filename:	import.css
+	created:	081230
+	update:		081230
+	copyright:	(c)2008 kazuwaya All rights reserved.
+	
+------------------------------------------------------------ */
+
+/* 初期設定 */
+@import "default.css";
+
+/* 全体レイアウト */
+@import "layout.css";
+
+/* コンテンツ */
+@import "container.css";
+
+/* プラグイン */
+@import "plugin.css";
+
+/* スタイル */
+@import "skin/type-a.css";
+
+/* EOF */

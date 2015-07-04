@@ -1,0 +1,80 @@
+ [[Ruby/TechAcademy]]
+ #contents
+ 
+ *事前に準備するもの
+ *Chrome
+ [[Chromeダウンロードリンク:https://www.google.co.jp/chrome/browser/desktop/index.html]]
+ ~
+ 
+ *Gyazo
+ スクリーンショット瞬間共有ツール
+ [[Gyazoの仕組み解説:http://engineer.blog.lancers.jp/2013/11/private-gyazo/]]
+ [[Gyazoダウンロード:https://gyazo.com/ja]]
+ Snipping tool の強化版。切り取ったスクリーンショットをそのままサーバーにアップロードして共有できる。
+ Gyazo GIFで数秒間勝手にフレーム録画してくれる。
+ 処理するサーバー側はrubyで書かれていて、オープンソース。画像を保存してURLを返すだけの簡素な処理。
+ クライアント側は特定の範囲をキャプチャーしてPOSTする。有志の方が作ってソース公開してるので、ソースを入手可能。
+ 公式Gyazoはpublicが前提なので機密性は保てないが、公開コードを使えば、
+ 社内専用のサーバーにGyazo環境を構築して機密性保持できる。
+ 
+ 
+ *Appear.in
+ [[Appear.inとは:http://www.lifehacker.jp/2014/02/140213google_appears.html]]
+ アメリカのビデオチャットツール
+ 最大8名でオンライン会議できる。
+ JavascriptとHTML5のみで構成されてる。Flashなし、プラグインなし、登録なし、手間なし。
+ 音質や画質は最高クラス。
+ トップページ開いて、部屋名入れるだけで自分の部屋できる。
+ 自分の部屋をロックすると、新しい人はノックしない限り入って来れない。プライバシーも問題ない。
+ リアルタイム動画で画面共有もできる。アプリケーション単位で実行画面を共有可能。
+ 
+ 
+ *GitHub
+ ~
+ 
+ *Cloud9
+ [[Cloud9公式:https://c9.io/]]
+ アプリケーション開発、データベースなどをクラウド環境で利用できるサービス。
+ オンラインのIDE。GitHubやHerokuともスムーズに連携可能。
+ Gitアカウントでログイン可能。Docker Ubuntu containerが裏で動いてる。
+ Vim/Emacs/Sublimeモードを切り替えられる。
+ イメージのGUIエディタ付き。
+ Built-In Terminalが使える。デバッガーが使える。
+ ~
+ 
+ **使い方
+ ログインして、Workspace作成 → 名前(hoge)を決めてプロジェクト種類選択 →  CreateProjectすれば
+ 勝手にUbuntuのVMが1つ作られて、そこの/home/ubuntu/workspace/で作業開始する。
+ このディレクトリがweb-rootになり、ここにindex.htmlファイルを配置すれば、
+ https://hoge-leetenki.c9.io/index.htmlからアクセスできる。
+ ちなみにこのVMのスペックは低い。(1 CPU、512MB RAM、1GB HDD)
+ 使い方はWindows Azure monacoとほぼ同じ。
+ D&Dでアップロードできる。
+ Webアプリを閲覧したい時はRunボタンでApache起動する。
+ ワークスペースを他人と共有したり、共同プログラミングも可能。右上のShare workspaceでシェアするURLを表示
+ 他人が編集URLにアクセスすると、Notificationにドアノックしてる人が表示される。許可すれば編集できる。
+ 常に共同編集する場合は、Share workspaceオプションで、Invite Peopleの名前を入れておけば良い。
+ ~
+ 
+ *Heroku
+ [[Heroku公式:https://www.heroku.com/]]
+ [[Heroku紹介:http://blog.ruedap.com/2011/04/29/ruby-heroku-web-app-development-tips-1]]
+ PaaSの一種。RailsアプリケーションをHeroku上で簡単に動かせる。
+ 独自ドメインを割り当てて、Herokuでサービス運用できる。
+ SalesForceが立ち上げたエンジニア向けサービス。
+ Windows AzureのRuby版。
+ アプリスペースをコマンド数回たたけば作れる。
+ 
+ | 容量 | 圧縮状態で100MBまで (gitやgem関連のファイルは含まず)|
+ |データベース	| PostgreSQLで5MBまで (有料で他のDBも使用可能)|
+ |cron	|1日に1回 (有料で1時間に1回)|
+ |ログ	|直近の100行までを閲覧可能|
+ |プロセス	|1dyno分が無料 (dynoはHeroku独自の単位)|
+ |リクエスト|	1dynoで秒間10-50リクエストを処理可能|
+ |メモリー	|1dynoで最大300MBまで|
+ |Rubyのバージョン	|1.8.6, 1.8.7, 1.9.2が利用可能|
+ 
++
++*ツール
++[[Chromeデヴェロッパーツール:http://www.buildinsider.net/web/chromedevtools/01]]
++

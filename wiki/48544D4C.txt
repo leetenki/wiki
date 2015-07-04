@@ -1,0 +1,401 @@
+#contents
+
+*HTMLとは
+Webサイトの本当の姿。
+HyperTextMarkupLanguageの略
+
+*最小のHTML
+#sh(html){{
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+       <meta charset="UTF-8" />
+       <title>タイトル</title>
+</head>
+<body>
+       <p>本文</p>
+</body>
+</html>
+}}
+~
+
+**DOCTYPE
+#sh(html){{
+<!DOCTYPE HTML>
+}}
+HTMLだよ〜という宣言。HTML5から楽になった。
+~
+
+**要素
+#sh(html){{
+<開始タグ>内容</終了タグ>
+}}
+ここまでを一つの'''要素'''と呼ぶ
+~
+
+**終了タグのない要素
+#sh(html){{
+<meta ... />
+}}
+のような、1つのタグで完結する要素もある。
+#sh(html){{
+<meta ...>
+}}
+のように、スラッシュを省略する事も可能。
+~
+
+**なぜタグが必要なの？
+#sh(html){{
+<title>タイトル</title>
+}}
+のように、意味付けを行っている。
+通常はブラウザは平文を理解できないので、なにがタイトルで、なにが重要で、を教えて上げるためのラベル。
+-
+
+**属性
+#sh(html){{
+<meta charset="UTF-8">
+}}
+の、一つのタグの中の付加情報の事。
+この場合charsetが属性名、UTF-8が属性値になる。
+~
+
+**インデント
+インデントはヘッダーとボディは下げない。その下から下げるべき。
+~
+
+**HTMLソース内の改行
+ソースの中に連続した半角スペース、改行、タブをいくらいれても、
+その連続した空白文字群を'''１つの半角スペース'''として勝手に変換される。
+
+
+**知っておくべきタグ
+よく使われる20個ほどさえマスターしておけば、他は必要に応じて検索すれば良い。
+~
+
+
+*HTML基本タグ集
+
+**html
+コンテンツの始まりと終わりを意味するタグ
+#sh(html){{
+<html lang="ja">
+...
+</html>
+}}
+~
+
+
+**head
+メタ情報の埋め込みや、外部ファイルの取り込みを行うタグ
+#sh(html){{
+<head>
+    <meta charset="UTF-8" />
+    <script src="somewhere.js"></script>
+    <link rel>
+</head>
+}}
+~
+
+
+**meta
+metaタグ自体はなんの意味もない。metaの属性が有用な情報
+metaタグ以降のコンテンツ全てにてきようされる文字コードの情報や、
+検索ロボット用に、サイト自体を説明する情報
+#sh(html){{
+<meta charset="UTF-8" />
+}}
+のように、utf-8が一般的、このタグがないと文字化けするので必須。
+※WindowsのローカルPCで保存したファイルはデフォルトでSHIFT_JISなので、
+保存する段階から、UTF-8で保存しないといけない。
+~
+
+**title
+タイトルタグはHTMLのドキュメントには表示されず、ブラウザのタブにのみ表示される。
+#sh(html){{
+<title>ブラウザタブに表示される文字列</html>
+}}
+~
+
+**style
+headタグ内に入れる。直接htmlにCSSを適用させる時に使う。
+#sh(html){{
+<head>
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+}}
+~
+
+**body
+メインコンテンツを全部ここに書く
+~
+
+**p
+文章の段落分けを行うタグ。自動で改行が挿入される。
+#sh(html){{
+<p>パラグラフだよ</p>
+}}
+~
+
+**コメント文
+ブラウザには表示されない。ソースを見るエンジニアにのみ、説明をするための文章
+#sh(html){{
+<!-- コメント -->
+}}
+~
+
+
+**h1~h6
+h1が最大、h6が最小
+#sh(html){{
+<h1>見出し1</h1>
+}}
+~
+
+**strong
+文章を一部強調する。Wordで言うctrl+Bのような太字処理
+#sh(html){{
+<strong>太字</strong>
+}}
+~
+
+**br
+改行タグ
+#sh(html){{
+<br/>
+}}
+~
+
+**hr
+水平線タグ (horizontal line)
+横の実線を1本入れる。
+#sh(html){{
+<hr />
+}}
+~
+
+**ol、li
+順序ありリスト(ordered list)
+pukiwikiで言う+のようなもの
+リストの各項目はli(list index)で囲む
+#sh(html){{
+<ol>
+    <li>項目1</li>
+    <li>項目2</li>
+</ol>
+}}
+~
+
+**ul、li
+順序なしのリスト、pukiwikiで言う-のようなもの
+#sh(html){{
+<ul>
+    <li>項目1</li>
+    <li>項目2</li>
+</ul>
+}}
+~
+
+**a
+リンクをつけるタグ
+hrefにハイパーリンクのurl、target="_blank"は、新たなWindowを生成するの意味
+ちなみに、targetに_blankを指定しなくても、なにかしら値を指定すれば新しいWindowで開いてくれる。
+aタグで囲まれた中にimgを入れたり、リンクのラベルはなんでも良い
+#sh(html){{
+<a href="url" target="_blank">リンク対象のラベル</a>
+}}
+~
+
+**img
+画像を貼付けるタグ。srcはソース、alt(alternate)は画像が表示されない時の代用の文字列
+#sh(html){{
+<img src="..." alt="..." />
+}}
+~
+
+**table、thead、tbody、tr、th、td
+tableは大枠、borderは枠線の太さ
+theadは最上行。それぞれの行のヘッダー、1つのtrのみを入れる習わし
+tbodyは実際のテーブルの内容
+thはヘッダーとなるべきセル、太線で囲まれる
+trはtable row、すなわち各行
+tdはtable data、すなわち行中の各セル
+#sh(html){{
+<table border="1">
+    <thead>
+        <tr>
+            <th>...</th>
+            <th>...</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>...</th>
+            <td>...</td>
+        </tr>
+    </tbody>
+</table>
+}}
+~
+
+
+**div、span
+ある範囲を１つのまとまりとして扱う意味。
+idやclassを付けて、その範囲全体にCSSを適用させるためのもの。
+divは色んなタグを含んだ大きな範囲。"container"は、ヘッダーやフッター以外の本体内容をまとめるのによく使われる。
+spanは短い範囲に使う。
+#sh(html){{
+<div class="container">
+   ...
+</div>
+}}
+#sh(html){{
+<span id="...">
+   ...
+</span>
+}}
+~
+
+複数のクラス値をスペースで区切って設定してもOK
+この場合、クラスaaaでも、bbbでも、cccでも、このdivの値を取り出せる。
+#sh(html){{
+<div class="aaa bbb ccc"></div>
+}}
+~
+
+**link
+CSSファイルを読み込む時に使う。
+head内の中に書く。
+#sh(html){{
+<link rel="stylesheet" type="text/css" href="style.css" />
+}}
+~
+
+**header
+サイトのbodyの一番上に書く内容。ナビゲーター、目次、検索フォームなどを、
+サイトの上部にまとめておく。昔はbodyの中に、最初にdiv id=headerみたいに書く人が多かったので、
+これを独立させてHTML5からheaderが使えるようになった。
+#sh(html){{
+<header></header>
+}
+}}
+~
+
+**article、section、aside、nav、footer
+HTMLの論理的なまとまり。CSSで扱いやすい他、人間もソースを読んで意味がわかりやすくなる。
+これまではdiv id="article"みたいな書き方が多く、手間だったので、HTML5で個々に用意された。
+#sh(html){{
+<nav>ナビゲーションやメニューなどの要素</nav>
+<article>記事としての要素</article>
+<aside>補足情報としての要素</aside>
+<footer>フッター要素。会社名や署名など</footer>
+<section>汎用要素、内容が漠然としてる時に使う</section>
+}}
+~
+
+*要素
+**class、id
+CSSで操作したり、javascriptで操作するためのラベル
+~
+
+**selected
+aタグの現在いるページや、formなどで、ある条件下で勝手に付加される属性
+~
+
+
+
+*動的Webサイト
+formなどを追加し、ユーザーの入力をサーバーに送信して、
+サーバーサイドで処理結果を返すというインタラクティブなWebコンテンツの事を動的Webサイトと言う。
+~
+
+**form
+サーバー送信用タグ
+#sh(html){{
+<form action="" method="post">
+</form>
+}}
+~
+
+**input
+-form内の1行入力する部品
+-typeに部品の種類を指定。
+-passwordにすれば●で表示されるようになる。
+-submitで送信ボタン
+-radioでラジオボタン。同一nameを1つのグループと見なす。
+-checkboxはcheckedが入ってる状態だとname=value形式で送信されるが、フラグがない場合はそもそも送信されない
+-hiddenは隠しデータ。画面上には表示させず、送信時にname=valueで送れる。
+#sh(html){{
+<form action="" method="post">
+    <input type="text" name="name"/>
+    <input type="email" name="email"/>
+    <input type="password" name="password"/>
+    <input type="submit" value="送信ボタン"/>
+    <input type="radio" name="group1" value="1" />
+    <input type="radio" name="group1" value="2" />
+    <input type="checkbox" name="checkbox1" value="1" checked />
+    <input type="hidden" name="hiddendata" value="pass"/>
+</form>
+}}
+~
+
+**select
+name=選択されてるoptionのvalue、の形式で送信される。デフォだとoption1が選択される。
+#sh(html){{
+<select name="select1">
+    <option value="1">option1</option>
+    <option value="2" selected>option2</option>
+</select>
+}}
+~
+
+**textarea
+calsは横の1行の文字数。
+rowsは行数
+maxlengthは入力できる最大文字数
+placeholderはデフォルトの補助テキスト
+#sh(html){{
+<textarea name="textarea1" cols=100 rows=3 maxlength=100 placeholder="default"></textarea>
+}}
+~
+
+**label
+inputやselectなどの部品にラベルを付けるためのもの。論理的なタグ
+ちなみにforに対象inputやcheckboxのidを指定して、access keyを設定するとalt + ctrl + キーでフォーカスできる。
+forでidを指定しなくても、labelタグ内にそのform部品を含めておけばaccesskeyでアクセスできる。
+#sh(html){{
+<form action="" method="post">
+    <label for="id_input" accesskey="o">名前</label><input type="text" id="id_input" name="name"/>
+    <label accesskey="a">男<input type="radio" name="group1" value="man"></label>
+</form>
+}}
+
+**script
+HTML内にスクリプトを埋め込む時に使うタグ
+HTML内に直接記述する方法
+#sh(html){{
+<script>
+   var x = ...
+</script>
+}}
+~
+外部ファイルを読み込む方法。
+head内に読み込む方法とbody内に読み込ませる方法があるが、どちらでもOK。
+bodyの末尾のほうが先にHTMLが全部ロードされるので、Webサイトが表示される初速が速い。
+#sh(html){{
+<script type="text/javascript" src="..."></script>
+}}
+~
+*ブロックとインライン
+ブロック要素は、デフォルトで、左端〜右端までがブロック範囲。上下に勝手に改行が入る。
+インライン要素は端から端まで伸びず、最小限に収まる。改行も入れない。
+ブロック要素はインライン要素を囲める。
+インライン要素はブロック要素を囲めない。spanの中にdivがあると、divはspanのスタイルや色の影響を一切受けない。
+|ブロック要素|div、p、h1、ol、ul|
+|インライン要素|span、strong、a、button、img、input、label|
+
+~

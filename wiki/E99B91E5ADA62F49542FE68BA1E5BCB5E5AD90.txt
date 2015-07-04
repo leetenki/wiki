@@ -1,0 +1,10 @@
+[[雑学/IT]]
+
+|     .cu (cuda)     |            CUDAのソースファイル   |
+|      .c                  |        C言語のソースファイル      |
+|   .cpp (cplusplus) |        C++のソースファイル        |
+| .cpや.cxx             |       C++のソース(コンパイラ依存)|
+|  .md (markdown)                   |    簡単な記法で見やすいReadMeが作れる。[[md記法まとめ:http://codechord.com/2012/01/readme-markdown/]]|
+|   .so                  |  FreeBSDやLinuxの動的ライブラリ|
+|  .dylib               |    OS Xの動的リンクライブラリ|
+|||

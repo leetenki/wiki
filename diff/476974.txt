@@ -1,0 +1,709 @@
+ #contents
+ 
+ *Git概要
+ **Gitとは
+ バージョン管理システムの一種。
+ 現場では、1つのプロジェクトを複数の開発者でソース変更する。
+ 共有フォルダでソースコードを共有するのは命がけ。不具合が発生したら以前に戻せなくなる。
+ ディレクトリごとに日付に入れる方法が使われる事もあるが、
+ これでは日付が入ったディレクトリがたくさんできてしまって、大規模開発に向いてない。
+ 誰がいつ修正したのか、どこでバグが発生したのかもわからない。
+ そこでバージョン管理システムが導入される。
+ ~
+ 
+ **集中型バージョン管理システム
+ １つのリポジトリに対して、全員がチェックアウトしたり、コミットする管理方式。
+ この方式では常にリポジトリにアクセス可能でなければならない。
+ CVSやSubversionなどがこの方式を採用
+ subversion のコマンドはSVN
+ ~
+ 
+ **分散型バージョン管理システム
+ リポジトリを、それぞれのエンジニアがクローンしてローカルに同じものを用意する。
+ ローカルリポジトリに対してチェックアウトやコミットしたりする。
+ ネットワーク上にいなくても、ローカルリポジトリに対してバージョン管理ができ、
+ エンジニアが独立したローカル環境で開発ができる。
+ 作業が完了するまで、他との統合を遅らせる事もできる。
+ リモートリポジトリとローカルリポジトリ間の情報のやりとりはpullとpushによって相互に行われる。
+ gitは差分ではなく、commitのたびに、変更のあったファイル全てを1つのスナップショットとして記録する。
+ このスナップショットのリストをpull pushによってリモートとローカルでやりとりする。
+ pullはリモートからローカルへのダウンロード反映
+ pushはローカルからリモートのアップロード反映
+ gitなどがこの方式を採用
+ ~
+ 
+ *用語説明
+ **リポジトリ
+ バージョン管理の対象。変更履歴などの情報を常に保持している。　
+ ローカルリポジトリと、リモートリポジトリの2つがある。
+ ~
+ 
+ **checkout
+ リポジトリから管理対象のファイルやディレクトリを取得する。
+ ~
+ 
+ **checkin
+ ファイルやディレクトリの変更をリポジトリへ履歴として登録する事。
+ ~
+ 
+ **commit
+ チェックインと同じ意味。gitでは通常こちらのほうが使われる。
+ ~
+ 
+ **branch
+ リポジトリ内で複数のファイルやディレクトリのバージョンを分岐させるための機能
+ 複数の異なる機能を同時に実装する場合に行われる。
+ gitのブランチはvirtualenvのイメージ。一つのbranchにチェックアウトすると、
+ そのブランチにのみ存在するファイルがある、隔離された環境になる。
+ ただし、バージョン管理対象外のファイル(git add  →  git commitしてないファイル)は全てのブランチに存在する。
+ gitの管理対象はファイルのみで、ディレクトリはどのブランチ環境でも存在する。
+ git initしたディレクトリ以下、再帰的にファイルのみを見てバージョン管理するので、
+ 子ディレクトリに別のgitバージョン管理があっても関係ない。
+ 子ディレクトリにも.gitがある場合。トップディレクトリの.gitでブランチ切り替えたり環境を帰ると、
+ 子ディレクトリの.gitではその都度、子ディレクトリ以下のファイルに変更があったと認識して、
+ add や commitを推奨してくる。
+ ~
+ 
+ **master
+ なにも分岐しない場合のデフォルトのブランチの事
+ ~
+ 
+ **merge
+ 複数の変更履歴を統合する。2つのアルゴリズムが存在し、gitが自動で選択する。
+ 1、早送りマージ：
+ masterブランチからnewブランチを作成して、newブランチで開発して、masterが一切動いてない状態でmasterにマージする時の考え方。masterの先頭にnewブランチをくっつけて、masterを先端まで早送りさせるだけ。本来分岐した場合は早送りマージではなく、三方向マージになるが、rebaseを使えば早送りマージも可能。
+ ~
+ 2、三方向マージ：
+ masterブランチからnew1とnew2を作成して、new1で機能1作ってnew2で機能2を作った場合のマージ。共通の祖先を使って新しいcommitを作る。
+ ~
+ 
+ 3、手動マージ：
+ 2つのブランチで同一ファイルを編集して、conflictが発生した場合に、
+ ~　　
+ 
+ **conflict
+ mergeする際に変更箇所が重複してauto mergeができなくなる現象
+ ~
+ 
+ **bareリポジトリ
+ bare = 裸の、素の、という意味
+ bare repository はworking directory を持たない。更新情報。すなわち.gitのメタ情報だけを持ってる。
+ サーバー側の更新専用リポジトリ。
+ non-bare repository はworking directoryを持つ。ローカルの作業用のリポジトリ
+ ~
+ 
+ **hooks
+ bare repository(中央リポジトリ)上の設定ファイル(シェルスクリプト)
+ commitされた時に実行する処理を書いておける。
+ 本番環境のあるサーバで、bare repositoryが更新されたら、
+ そこから更新された情報を自動でpullしてくる。といった設定が可能。
+ ~
+ 
+ **configファイル
+ gitの設定ファイルは2種類あって、各リポジトリ固有のconfigとユーザーの全てのリポジトリに適用されるconfig。
+ どちらもテキストエディタで直接編集可能
+ リポジトリ固有の設定ファイル　<repo>/.git/config　に保存されてる。
+ ユーザ固有の設定ファイル　　　~/.gitconfig　に保存されてる。
+ git config --globalの場合はこのグローバルファイルが変更される。
+ 優先順位は、リポジトリ固有ファイル　＞　ユーザ固有ファイル
+ ~
+ 　
+ **gitignore ファイル
+ .gitのあるトップディレクトリに.gitignoreファイルを手動で作って、
+ バージョン管理からはずしたいファイル(もしくは拡張子*.exe)を1行1行書いてあげれば、
+ そのファイルだけバージョン管理からはずれる。git statusしてもなにも表示されなくなる。
+ ソースとは無関係に、自動で生成される中間ファイルなど、あきらかにバージョン管理する必要のないファイルがあれば、ワイルドカードで指定しておく。
+ ~
+ 
+ **commit hash
+ コミットの一意なチェックサムを表す。
+ git log <from>..<to>　　で2つのハッシュを指定すれば、その間の全てのcommitを表示できる。
+ hash値は4文字以上あれば大体被らない
+ ~
+ 
+ **HEAD
+ 最も新しいcommitの事
+ HEAD~1　HEADから1つ前のcommit
+ HEAD~2  HEADから2つ前のcommit
+ ~
+ 
+ **detouched HEAD
+ HEADから分離された状態。commitのcheckoutを行うと、HEADから分離される。この状態で開発をしても、
+ 別ブランチで開発してる事にはならない。
+ いくら開発しても、他のブランチにチェックアウトした時点で全ての開発履歴が消える。
+ そこから開発を進めてもどこかとマージできない。
+ ~
+ 
+ **origin
+ git cloneを行った場合、clone元のリモートにあるリポジトリのURLがoriginという変数に代入される。
+ すなわち中央リポジトリの場所をoriginという。
+ origin/master　とは、中央リポジトリの場所かつマスターブランチの事を意味する。
+ ~
+ 
+ **追跡対象
+ 過去に一度でも.addを実行した事があって、ステージにあがった事のあるファイルの事。
+ 新しく作られて、かつ.addを実行する前のファイルを追跡対象外と言う。
+ ~
+ 
+ **リモートプロトコル
+ gitでは、リモートリポジトリにアクセスする手段として、httpとsshをサポートしている。
+ httpはread onlyでpullやcloneのみ実行可能
+ push したり、リモートリポジトリを書き換える場合は、通常sshによって行われる。
+ リモートマシンで有効なsshアカウントが必要
+ ~
+ 
+ *Git初回設定
+ #sh(bash){{
+ git config --global user.name "leetenki"
+ git config --global user.email toukyouniversityoftechnology@gmail.com
+ git config --global core.editor vim 
+ }}
+ ~
+ 
+ *リポジトリ初期化
+ **init
+ git init バージョン管理を行っていない既存プロジェクトにcdして、これを実行すれば、
+ そのディレクトリ以下がgit リポジトリになる。
+ 実行後は、プロジェクトのトップディレクトリのみ.gitというサブディレクトリが作られる。
+ トップ以下の他のディレクトリー階層にはなにも作らない。
+ #sh(bash){{
+ git init <dir>
+ }}
+ を指定すると、current directory以下に指定したディレクトリを作って、その下に.gitを作ってバージョン管理開始する。
+ ~
+ #sh(bash){{
+ git init --bare <dir>
+ }}
+ --bareフラグにより、作業用ディレクトリを持たない、管理情報のみ格納するためのレポジトリが作られる。
+ このディレクトリではファイル編集や変更ができない
+ 中央リポジトリは基本的に--bareで指定する。
+ 中央リポジトリの場合h、ディレクトリ名.gitと付ける習慣がある。付けなくてもいい。
+ 付けてもcloneの時に.git拡張子は無視され、クローン先=non bare repository扱いになる。
+ init した後は必ず1回commitする。これをしないとmasterが存在せず、branch分岐できない。
+ ~
+ **clone
+ #sh(bash){{
+ git clone <repo> <dst>
+ git clone ssh://leetenki@t-lab.com/path/to/my-project.git
+ }}
+ どこかにある既存のgitリポジトリを、カレントに複製してくる。
+ クローン先というのはローカルPCの中でも良いし、リモートマシン上でも良い。
+ リモートマシンであれば、htmlかsshプロトコルでアクセスさえできれば問題ない。
+ ~
+ 
+ クローンすると、configファイルの中に自動的に origin という変数が作られ、
+ そこにリモートリポジトリのurlが保存される。確認したい場合は、
+ #sh(bash){{
+ git config --get remote.origin.url
+ }}
+ で設定ファイルを確認するか、もしくは
+ #sh(bash){{
+ git remote -v　
+ }}
+ で接続先を確認すればOK
+ ~
+ 
+ **remote
+ URLのショートカット名を作ったり確認するコマンド
+ #sh(bash){{
+ git remote add <name> <url>
+ }}
+ で、URLをnameという変数名に代入
+ ~
+ 
+ #sh(bash){{
+ git remote rm <name>
+ }}
+ で、nameの変数を削除する。
+ ~
+ 
+ #sh(bash){{
+ git remote rename <old_name> <new_name> 
+ }}
+ で変数名変更
+ ~
+ 
+ #sh(bash){{
+ git remote set-url <name> <new_url>　
+ }}
+ でURLを書き換える
+ ~
+ 
+ #sh(bash){{
+ git remote
+ }}
+ で現在のショートカット一覧を表示
+ ~
+ 
+ #sh(bash){{
+ git remote -v
+ }}
+ で現在のショートカットを、URL付きで表示
+ ~
+ 
+ *汎用操作
+ **add、rm
+ #sh(bash){{
+ git add ファイル名
+ git add . でカレント以下を再帰的にaddする
+ git add -p   対話形式でカレント以下のファイルをaddするかどうか選択できる。
+ git rm ファイル名
+ git add --all  削除対象も追加対象も全てステージに追加される
+ }}
+ ~
+ これらはファイルをバージョン管理対象に追加するためのコマンド。
+ 次回のcommitで一括リポジトリに反映できるように、ファイル名をステージに上げておくだけ。
+ addしただけじゃなにも起こらない。
+ 1つのcommitによって1つのサブバージョンができる考え方。
+ また、てきとうに大量のファイルを変更したあと、関連性の強いファイルを.add してから、
+ まとめてcommit という手作業を数回繰り返す事で、
+ commitごとに意味を持たせる事もでき、後々バグ取りがしやすくなる
+ ~
+ 
+ **commit
+ git commit で、現在ステージされてる全てのファイルをリポジトリに安全に保存し、1つのサブバージョンとする。
+ これだけだとtext editorが立ち上がって保存メッセージを聞かれる。コミットメッセージは基本的に、
+ 1行目に概要書いて、2行目空白、3行目以降で　- 機能の説明 を一つずつ加えて行く。
+ #sh(bash){{
+ 2015_06_30修正終了
+ - 機能1はこう
+ - 機能2はこう
+ }}
+ ~
+ 
+ #sh(bash){{
+ git commit -m "message" 
+ }}
+ とすれば、one line messageだけで済む。
+ ~
+ 
+ #sh(bash){{
+ git commit -a
+ git commit --all
+ }}
+ 過去にステージされて事のある追跡対象のファイルが修正されて、かつaddしてない場合でも、
+ 自動で全てaddしてくれる。
+ ~
+ 
+ #sh(bash){{
+ git commit --amend
+ }}
+ (修正)直前のコミットをなかった事にして、直前のコミット内容と現在のステージングされてる内容を合わせて、
+ 一つの新しいコミットを作る。
+ ~
+ 
+ **tag
+ #sh(bash){{
+ git tag <name>
+ }}
+ 現在HEADのあるブランチのスナップショット(コミット)に名前を付ける。
+ ブランチ名と同じ。スナップショットごとに別の名前をつけられる。
+ ~
+ 
+ **status/log
+ #sh(bash){{
+ git status ステージにある情報、バージョン管理外の情報を確認するコマンド
+ git log    commitされた履歴を確認するコマンド
+ git log --oneline で1ログ1行の表示に切り替える
+ git log --author="leetenki"  特定のエンジニアのcommit履歴のみを抽出。
+ git log -n 3　　　　で1ページ3ログまでしか表示できないようにする。次のページに切り替えれば次が表示される。
+ git log grep="lee"  各コミットのコミットメッセージを検索して、文字列leeを含むものだけを抽出して表示する。
+ git log <file>　　　指定したファイルのコミット履歴のみ表示する
+ git log <from>..<to>　でfromスナップショット(もしくはブランチ[の先頭])からtoのスナップショットまでの差分を表示。toを省略した場合は現在のブランチのHEAD
+ git log HEAD~1..  HEADのみのcommit ログを表示
+ git log --graph --decorate --oneline　が最も見やすい。--graphでテキストグラフを生成。--decorateでブランチ名表示。--onelineで1行表示
+ git log stat (メタ情報：changed files, insertions, deletionsを全て表示してくれる)
+ git log -p 差分の内容のログまで詳細に表示する。
+ }}
+ ~
+ 
+ 下の3つとも同じ機能。現在のブランチのスナップショットの新しい機能のうち、masterブランチのスナップショットに存在しないもののログを表示
+ #sh(bash){{
+ git log master..HEAD
+ git log master..current_branch
+ git log master..
+ }}
+ ~
+ 
+ **checkout
+ ブランチ環境に移行する/特定のコミット環境に戻す/特定のファイルのみを戻す
+ の3通りの使い道がある。
+ #sh(bash){{
+ git checkout <file>            対象ファイルを、HEADの状態に戻す。その後行った変更(ステージしていない変更)を全て破棄
+ git checkout <branch>        masterなどのブランチ名を指定して、そこへ移動する。
+ git checkout -b <new_branch>     新たなブランチを内部でgit branchコマンドを使って生成してから、そこへcheckoutする
+ git checkout -b <new_branch> <existing_branch>  既存ブランチの先端を指定して、そこを起点にnewブランチを作成して、そこへcheckout
+ git checkout <commit>        HEADなどを指定する
+ git checkout <commit> <file> HEAD lee.txtのように、特定のファイルのみを復元する。
+ }}
+ ~
+ checkout 1e02jf  のように、以前のコミットをチェックアウトした場合　→　基本的には閲覧だけ。
+ ここで開発を続ける事はない。
+ checkout master  で元に戻る。そのあとgit reset や git revertで以前のバージョンに戻してから、再開発するのが一般的
+ checkout 1e02jf myfiile.txt  この場合、以前のコミットにおける対象ファイルのみを読み込んでくる。
+ そのままaddとcommitしてmaster以降にも反映させられる
+ ~
+ 
+ **revert
+ #sh(bash){{
+ git revert <コミット>
+ }}
+ で、以前のコミットしたスナップショットをなかった事にした状態の、
+ 新しいコミットを作ってmasterの先に繋げる
+ ~
+ 
+ **reset
+ #sh(bash){{
+ git reset <file>     で、指定したファイルをステージングエリア上から削除する。
+ git reset　　　　　　　で、現在のステージ上の全てのコミットをアンステージする。
+ git reset <コミット>　で、以前のコミットしたスナップショットの時点に時間を戻す。それより未来のスナップショットは全てなかった事になる。
+ git reset --soft <コミット> で、以前にコミットしたスナップショットに戻す。ただし、それより未来の変更点はは全てステージングエリアに乗せたままキープしてくれる。
+ git reset --soft HEAD^ がよく使われる。直前のコミットの状態に戻して、かつそれ以降の変更点をステージングする。コミットを修正したい時に便利
+ }}
+ ~
+ resetはrevertよりも危険
+ git reset <コミット> --hard で、以前のコミットに時間を巻き戻した上で、カレントの状態もそれに一致させる。
+ --hardを指定しなければ、カレントは最新を保てる。
+ ローカルのcommitを取り消すためにresetを使う。
+ リモートに対して絶対に使ってはならない。リモートの場合はみなで話し合った上で、revertする。
+ resetの使い道としては、一気にステージしちゃった場合に1つのファイルをアンステージしたり、
+ ローカルで実験的なcrazy開発をしてコミットした場合、そのコミットを取り消したい時に使う。
+ ~
+ 
+ **clean
+ #sh(bash){{
+ git clean
+ }}
+ ~
+ 作業ディレクトリから追跡対象外のファイルを削除する。
+ (一度も.addした事がない、すなわち新しく作られてかつステージに上がってないファイルのみを削除)
+ #sh(bash){{
+ git clean -n   削除の予行演習、実際には削除しない。
+ git clean -f 　fフラグは必須。fileを削除するの意味
+ git clean -df 追跡対象外のdirectoryも削除する。
+ git clean -xf gitignoreで記述されてるファイルも削除対象にする。
+ }}
+ ~
+ 
+ **config
+ gitの環境設定を確認したい時はconfig -lもしくは--listを使う。
+ #sh(bash){{
+ git config --list
+ }}
+ ~
+ *branch
+ #sh(bash){{
+ git branch リポジトリ内全ブランチを表示
+ git branch -r  でリモートのブランチのみ表示
+ git branch -a 　リモートからfetchしてきたブランチも、ローカルもブランチも全て表示する。
+ git branch <newbranch>  新しいブランチを作成する 作成後は、git checkoutでそのブランチに移動する。
+ git branch -d <existbranch> 既存のブランチを削除(currentは削除不可) マージされてない変更があると拒否される。(マージさえされていれば、ブランチ自体を消してもあとから復元できる)
+ git branch -D <existbranch> マージされていないブランチだとしても、既存のブランチを強制的に削除する。
+ git branch -m <newname>  current branch を renameする(modify name)
+ }}
+ ~
+ 
+ **merge
+ 分岐したbranchを統合する処理を行う
+ #sh(bash){{
+ git branch master    統合先のブランチに移動する(masterが多い)
+ git merge <branch> 　指定したbranchを現在のブランチにマージして現在のブランチを更新する。指定したbranchはなにもしない。内部で自動的にアルゴリズムが選択されて、早送りマージor三方向マージになる。
+ git branch -d <branch> merge成功したあとは古いブランチを削除する。
+ }}
+ ~
+ 
+ **rebase
+ プロジェクトの直線性を維持するために必要。
+ 例えばリモートリポジトリから最新のスナップショットをpullしてきた後に、開発を続けて3回ほどcommitした。
+ この時リモートリポジトリを確認してみるとすでに他の人がpushして、新しい機能が追加されていた。
+ そこで、自分のブランチの開始時刻を新しいorigin/masterのHEADに持っていきたい時
+ (皆が作業完了したものをベースに開発したよと言い張りたい時)に、
+ rebaseを行う。rebase後にマージすると、単なる早送りマージになり、
+ 一切conflictが生じずに、一直線にマージが完了する。
+ そのあとでpushすれば、公開リポジトリの履歴は一直線で美しく見える。
+ #sh(bash){{
+ git checkout working
+ git rebase <base>    
+ }}
+ ~
+ 選択したbaseブランチ(master等)の先頭をrebaseのはじまりにする。
+ (実際に内部では既存のブランチが削除されて大量な再計算をする)
+ リベース処理を行うと、<base>ブランチとカレントブランチの共通の先祖まで戻って、
+ その先祖から先に<base>ブランチのコミットを追加していく。
+ これが終わったあとに、カレントのコミットを1個ずつ追加していき、最後に、HEADを先頭にする。
+ #sh(bash){{
+ git rebase -i
+ }}
+ でinteractiveによってリベース可能。過去の分岐点から今にいたるまでの自分のブランチ上での乱雑なコミットを、
+ 統合したり、不要コミットを削除したり、ここまでのコミット履歴を全部綺麗に作り直せる。
+ interactiveモードが起動すると、エディタが開く。エディタの中に実行するコマンドスクリプトを書き換えればOK
+ pick <Hash>    pickしたコミットを、リベース後も同様にコミットする
+ squash <Hash>  squashに指定したコミットは、リベース後1つ上のpickしたコミットに統合される消える。
+ ゆえにコメントを書いても意味ない。スクリプトを書いて保存すればリベースが行われる。
+ この時squashとpickの情報を元に、新しくなったコミットのコミットメッセージを聞かれるので逐一書く。
+ ~
+ 
+ **reflog
+ rebaseしたり、commitしたり、checkoutしたり、resetしたり、mergeしたり、こういった特殊な操作を行うと、
+ 必ずHEADの場所が変化する。こういったHEADの場所が変化した瞬間に、そのログがreflogとして記録される。
+ reflogのハッシュを指定すれば、resetしたデータも元に戻せる。
+ #sh(bash){{
+ git reflog
+ }}
+ コマンドをたたけば見れる。
+ ~
+ #sh(bash){{
+ git reflog --relative-date
+ }}
+ コマンドをたたけば、何日前の何時間前に行ったコミットなのか、といった時間情報も一緒に表示してくれる。
+ ~
+ 
+ 
+ **fetch
+ fetch = 取ってくるの意味。
+ リモートリポジトリからローカルリポジトリにブランチをインポートするコマンド
+ #sh(bash){{
+ git fetch <remote>  でリモートの全てのブランチをローカルにfetchする。fetchしたブランチはローカルとは別に<remote>/<branch>という名前になる。git branch -a もしくは git branch -rで確認可能
+ git fetch <remote> <branch> でリモートのブランチをローカルにfetchする
+ git fetch <remote> <remote_branch>:<local_branch>  でリモートのあるブランチを、別の名前としてローカルに取ってくる。
+ }}
+ ~
+ 
+ fetchしてきたリモートブランチをcheckout すると、detached HEAD状態(HEADから離れた状態)になる。
+ git fetchによって取って来たorigin/masterブランチを、ローカルのmasterブランチにmergeすると、
+ ローカルなmasterのHEADが、origin/masterと同じポイントになり、同期が完了する。
+ ~
+ 
+ **pull
+ git pull はgit fetch からの git mergeを自動的に行ってくれる簡易コマンド
+ git pull <remote>  現在のブランチの名前と同じリモートのブランチを探して取ってくる。
+ そのブランチが先に進んでる場合は、現在のブランチとマージする。
+ #sh(bash){{
+ git pull --rebase <remote> 
+ }}
+ ~
+ 通常はfetchの後にmergeするのだが、--rebaseを指定すると、mergeの代わりに--rebaseする。
+ config設定で、
+ #sh(bash){{
+ git config --global branch.autosetuprebase always
+ }}
+ を指定しておくと、それ以降すべてのgit pull で自動的にrebaseされる。現場でよく使われる手法。
+ ~
+ 
+ 
+ **push
+ ローカルリポジトリからリモートリポジトリへ送信する操作。
+ リモートリポジトリ内では、受け取ったデータが早送りマージできる場合以外拒否する。
+ #sh(bash){{
+ git push <remote> <branch>
+ }}
+ ~
+ 例えば、git push origin master を実行すると、origin/masterブランチ内で、
+ git merge lee/master と同じ処理が行われて早送りマージされる。
+ 指定したbranchがローカルのみに存在する場合は、リモート側で新しくブランチを作成する。
+ ~
+ #sh(bash){{
+ git push <remote> <local_branch>:<remote_branch>
+ }}
+ これがpushの省略しない正式な書き方
+ ローカルのlocal_branchをリモートのremote_branchにpushする。
+ 例えば、git push origin master:new_branch といった事も可能。ローカルのmasterブランチをリモートのnew_branchという場所にpushする。
+ ~
+ #sh(bash){{
+ git push <remote> :<remote_branch>
+ }}
+ なにも存在しないNULLをremote_branchにpushする。すなわちリモートのremote_branchを削除する。
+ ~
+ 
+ #sh(bash){{
+ git push <remote> <branch> --force
+ }}
+ forceを指定すると、早送りできない場合でも強制マージさせる。remote/branch の内容を全てローカルに一致させ、
+ ブランチ分岐した部分は全削除する。
+ ~
+ 
+ #sh(bash){{
+ git push <remote> --all
+ }}
+ 全てのローカルブランチをリモートブランチにpushする。縦断爆撃push。昔はgit pushと省略するだけでこれが実行された
+ ~
+ 
+ #sh(bash){{
+ git push <remote> --tags
+ }}
+ タグフラグをつけない限りタグは自動的にpushされない。
+ --tagsフラグをつけると全てのローカルタグをリモートにpushできる
+ ~
+ 
+ 
+ pushした先のリポジトリは原則的にbareリポジトリに限定するべき。
+ リモートがbareじゃないリポジトリという事は、リモート上では常にmasterにチェックアウトされてる状態で、
+ だれもが入って編集できる。pushしようとしてる時に誰かがmaster内にいて編集中かも知れない。
+ git push origin masterをやってしまうと、その人がmasterで編集中にも関わらず、masterにpushできてしまう。
+ ゆえにデフォでは、リモートの現在チェックアウトされてるブランチ(なにもしない場合はmaster)に対して、
+ pushする事は不可能。現在チェックアウトされてないブランチのみ可能。すなわち
+ git push origin master:some_new_branch とする事で、リモート上に別ブランチを作ってそこにpushできる。
+ あとからリモートにいってmergeもしくはrebaseすればOK
+ ~
+ 
+ 
+ 
+ *注意事項
+ ※公開済みリポジトリに対して絶対してはならない事
+ #sh(bash){{
+ git reset
+ git commit --amend
+ git rebase
+ }}
+ 公開済みリポジトリのコミットの歴史を書き換えるので、
+ スタンダードな歴史を継承してる他のエンジニアからは自分たちの作業ベースが書き変わったように見える。
+ ~
+ 
+ *リセットテクニック
+ ※前回のcommitからいろいろcrazyな機能を実装してみて、ダメだった場合は、
+ #sh(bash){{
+ git reset --hard　で変更された全ての既存ファイル(1回以上追跡した事のあるファイル)をアンステージ & 変更前に戻して、
+ git clean -df 　　で新しく追加した無意味なファイルやディレクトリを全部削除
+ }}
+ ~
+ 
+ 
+ 
+ 
+ *Git ワークフロー
+ **feature branch
+ 全nてのfeatureの開発において新しいブランチを一つ作成しそこで開発を行う。
+ ~
+ 
+ **pull request
+ featureを中央リポジトリにマージする前に、メンテナーに認証してもらう手法。
+ もしくは他の開発者に助言してもらう。もしくは公のforumとして、他の開発者達と一緒に議論する。
+ Githubなどではプルリクエストが簡単に行える。
+ ~
+ 
+ **fork
+ fork型ワークフローの場合は、
+ #sh(bash){{
+ git remote add upstream <original_url>
+ }}
+ でオリジナルリポジトリをupstreamという名前で手動で定義しておく。
+ forkの場合、ローカルリポジトリや、自分専用のリモートリポジトリをアップデートするには、
+ upstreamのリポジトリから最新のデータを取ってくる必要がある。
+ ~
+ #sh(bash){{
+ git fetch upstream master でアップストリームの最新データを落としてくる。
+ git push origin master で自分専用のマスターリポジトリへpushする。
+ }}
+ ~
+ 
+ 自分のリモートリポジトリをオリジナルのリモートリポジトリに反映させたい場合は、
+ オリジナルの作者へプルリクエストをする。オリジナルの作者が
+ #sh(bash){{
+ git fetch <others_url> <branch>
+ git merge FETCH_HEAD
+ }}
+ により、オリジナルに反映させる。この時点で、forkしてる全てのユーザーにpull requestを出して、
+ 全ユーザーがオリジナルをpullして、最新状態に更新する。
+ ~
+ 
+ 
++*Git-credential(認証ヘルパー)
++[[Git認証ヘルパー:https://mistymagich.wordpress.com/2013/10/07/git-credential-helper%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6http%E8%B6%8A%E3%81%97%E3%81%A7%E8%AA%8D%E8%A8%BC%E3%81%8C%E3%81%8B%E3%81%8B%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%83%AA%E3%83%9D%E3%82%B8/]]
++[[Git認証Q&A:http://www.backlog.jp/git-guide/reference/trouble-shooting.html]]
++Git1.7以上から利用可能になった機能。git clone等で認証ページにアクセスする時、初回パスワードを入力すれば、
++認証ヘルパーがそのパスワードを内部で記憶してくれるので、2度目以降はパスワード認証が必要なくなる。
++brewでgitをインストールするとデフォでパッケージに入ってる。
++#sh(bash){{
++git help -a|grep credential-
++}}
++このコマンドを叩けば、認証ヘルパーが入ってるか確認できる。
++~
++
+ *Git チートシート
+ **新規作成
+ #sh(bash){{
+ git init --bare <remote_repository.git>
+ git clone <remote_url> <dest>
+ }}
+ ~
+ 
+ **初期化コミット
+ #sh(bash){{
+ echo "something" > README
+ git add README
+ git commit -m "Initial commit"
+ git push origin master:master
+ }}
+ ~
+ 
+ **リモートブランチのチェック
+ #sh(bash){{
+ git fetch origin master:remotes/origin/master
+ git merge FETCH_HEAD
+ }}
+ ~
+ 
+ **ローカルで開発
+ #sh(bash){{
+ git checkout -b <new_feature>
+ [create some new feature]
+ git add .
+ git commit -m "explain a new feature"
+ ......
+ }}
+ 
+ **ローカル機能ブランチで開発後
+ #sh(bash){{
+ git checkout <new_feature>
+ git push origin <new_feature>:<new_feature>
+ }}
+ ~
+ 
+ **ローカル機能をリモートにマージ
+ #sh(bash){{
+ git checkout master
+ git fetch origin master
+ git merge remotes/origin/master   (FETCH_HEADでもOK)
+ 
+ git checkout <new_feature>
+ git rebase master -i
+ 
+ git checkout master
+ git merge <new_feature>    (fast-forward)
+ 
+ git push origin master:master
+ git branch -d <new_feature>
+ }}
+ ~
+ 
+ **確認
+ #sh(bash){{
+ git status
+ git log --graph --decorate --oneline
+ git log -p
+ git log --stat
+ git branch -a
+ git show-branch --all
+ 
+ tig
+ tig --all で全ブランチ表示
+ [Enter]キーでコミットの詳細表示
+ [s]キーでstatus表示
+ }}
+ ~
+ 
+ **削除
+ #sh(bash){{
+ git branch -d <repogitory_wants_to_delete>
+ git push origin :<remote_ropository>
+ }}
+ ~
+ 
+ **やり直し
+ #sh(bash){{
+ git reset
+ git reset --hard
+ git commit --amend
+ git revert
+ git rebase
+ }}

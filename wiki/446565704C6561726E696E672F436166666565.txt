@@ -1,0 +1,557 @@
+#contents
+
+*Caffeeとは
+Deep learningと行うためのframework
+現GoogleのエンジニアYangqing Jiaが最初に作った。
+いまはBVLC(Berkeley Vision and Learning Center)で開発が続けられている。
+機械学習の難しい数式を知らなくても高速で最高精度の特徴抽出ができる。
+自動でCNN(Convolution Neural Network)を構築してくれる。
+GitHubにあらゆるチュートリアルやアルゴリズムが配布されてる。
+~
+*環境構築の流れ
+環境構築のハードルが異次元の高さ。
+依存パッケージが大量にあって、パッケージの一つでも相性合わなかったりすると意味不明なエラーでまくる。
+あとPATH、コンパイル環境、ダイナミックリンクライブラリの環境(stdlbc++ or libc++)でも人によって全く違うエラー
+出るので、相当根気強く手動で一個一個error fixしないと無理。
+
+参考：
+[[一番わかりやすい英語のサイト:http://installing-caffe-the-right-way.wikidot.com/start]]
+[[Mac10.10 CUDA7 AnacondaでCaffe環境構築:http://hoondy.com/2015/04/03/how-to-install-caffe-on-mac-os-x-10-10-for-dummies-like-me/]]
+[[Mac10.10 CUDAなし(libc++)でCaffe環境構築:http://suiseipenguin.hatenablog.com/entry/2014/12/16/220803]]
+[[Mac10.10 CUDAなし(stdlibc++)で環境構築:http://ichyo.jp/posts/caffe-install/]]
+[[Mac10.9  CUDA6.5(stdlibc++)で環境構築:http://reiji1020.hatenablog.com/entry/2014/11/27/175140]]
+[[Mac10.9.5 CUDA7(libc++)で環境構築:http://vaaaaaanquish.hatenablog.com/entry/2015/01/22/185821]]
+[[公式サイト:http://caffe.berkeleyvision.org/install_osx.html]]
+事前に準備するものとして、
++CUDA Library
++BLAS(atlas or openblas)
++glog, gflags, leveldb, snappy, hdf5, lmdb
++protobuf(python依存の場合ソースコンパイル)
++Boost(>=1.55 python依存の場合ソースコンパイル)
++OpenCV(>=2.4 python依存)
++その他rapper
++python環境におけるnumpy、scipy
++パッケージ管理としてbrewとpipを導入してる前提
+~
+*OpenCVのインストール
+[[OpenCVインストール手順:https://jjyap.wordpress.com/2014/05/24/installing-opencv-2-4-9-on-mac-osx-with-python-support/]]
+
+まずはbrewを最新状態にする。
+#sh(bash){{
+brew doctor
+brew update
+}}
+~
+
+brew tap でサードパーティー製のリポジトリを検索対象に登録しておく。じゃないとパッケージが見つからない。
+installを実行すると30分ほどかかる。
+#sh(bash){{
+brew tap homebrew/science
+brew install --fresh -vd opencv
+}}
+~
+
+現在の環境(仮想環境)で優先順位最も高いpythonコマンドの場所を調べて、そのパッケージディレクトリに移動する
+#sh(bash){{
+which python
+cd ~/python_learning/AI_PROJECT/lib/python2.7/site-packages/
+}}
+~
+
+opencvはCellarにインストールされてるので、その中のcv.py及びcv2.soへのリンクを、
+pythonのsite-packagesに作っておく。これでpythonはimport時にカレントPATHのcvパッケージを読めるようになる
+#sh(bash){{
+ln -s /usr/local/Cellar/opencv/2.4.11_1/lib/python2.7/site-packages/cv.py cv.py
+ln -s /usr/local/Cellar/opencv/2.4.11_1/lib/python2.7/site-packages/cv2.so cv2.so
+}}
+~
+
+そのままimport cvしたら、opencvの依存パッケージのlibjpeg.8.dylibが見つからないらしいので、
+pythonが読みにいける場所にそのリンクを作っておく
+#sh(bash){{
+ln -s /usr/local/Cellar/jpeg/8d/lib/libjpeg.8.dylib /usr/local/lib/libjpeg.8.dylib
+}}
+~
+
+
+うまくリンクできてるかimportで試してみる
+#sh(bash){{
+import cv
+}}
+~
+
+*CUDAインストール
+ComputerUnifiedDeviceArchitecture
+NVIDIAが提供する、GPU向けのC/C++言語の統合開発環境。
+GPUを利用した計算プログラムがCライクに書ける。
+GPUを使えば''大量のデータを複数のプロセッサで並列処理''できるので高速。
+GPUメーカーは主にNVIDIAとAMDの２社が最大手。
+
+**CUDAドライバー
+※CUDAインストーラを使う場合はCUDAドライバーが同梱されてるので、個別にインストール不要。
+Caffeeの公式に"CUDA 7 is strongly suggested."と書いてあるので、
+NVIDIA公式サイトからCUDA7のドライバーを入れる
+[[CUDA公式ドライバ:http://www.nvidia.co.jp/object/mac-driver-archive-jp.html]]~
+※ダウンロードしたパッケージを解凍後、『開発元が未確認のため開けません』と出る場合は、
+Ctrl押しながら再度クリックして、開くを押して警告を無視すればインストールできる
+もしくはシステム環境設定からセキュリティーレベルを永続的に下げる事でもOK
+[[警告対処法:https://helpx.adobe.com/jp/x-productkb/global/cpsid_93896.html]]~
+インストールが完了すると、Macのシステム環境設定からCUDAドライバを確認できる。手動で随時最新版にアップデート。
+インストールした後、次のディレクトリを確認すると、libのみが存在する。まだbinがない。Tookitを入れればbinもできる。
+#sh(bash){{
+ls /usr/local/cuda/
+}}
+~
+
+**CUDAインストーラ
+[[セットアップ手順:http://chobolog.seesaa.net/article/354166899.html]]
+DriverやToolkitなどをまとめてインストールする場合は、次のインストールウィザードを使う
+[[公式インストーラ:https://developer.nvidia.com/cuda-downloads]]
+ここからダウンロードして、ウィザードを起動してインストール。
+Toolkit、Driver、Sample全て選択。
+インストール後、Macのシステム環境設定からCUDAドライバを最新版にアップデートする。
+正常にインストールされれば、/usr/local/cude/以下にbin/やlib/などが全て揃っている事を確認できる。
+#sh(bash){{
+ls /usr/local/cuda/
+}}
+~
+
+インストールしただけじゃcude/へのパスが通っていないので、.bashrcや.zshrcなどに環境へのパスを通す
+.zshrcを開いて、次の2行を追加する。追加後、envもしくはecho $PATHで/usr/local/cuda/binを確認する。
+#sh(bash){{
+PATH=/usr/local/cuda/bin:$PATH
+DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
+}}
+~
+
+/usr/local/cuda/lib/へのアクセス権限を確認して、755になってない場合は、chmodする。
+#sh(bash){{
+sudo chmod 755 /usr/local/cuda/lib
+}}
+~
+
+CUDAが正しく動作するかをチェックするために、サンプルプログラムを動かす。
+インストール時にCUDAのサンプルとツールキットを選択していれば、/Developer/というディレクトリができるので、
+そこへ移動。そしてシミュレーションのパーティクルのサンプルフォルダへ移動。
+#sh(bash){{
+cd /Developer/NVIDIA/CUDA-5.0/samples/
+cd 5_Simulations/particles/
+}}
+~
+
+makeして実行してみて、サンプルが問題なく動けば完了
+#sh(bash){{
+make
+./particles
+}}
+~
+
+CUDAのプログラムを手動でコンパイルする時は、.cu拡張子のファイルに対して、
+専用コンパイラのnvccコマンドを実行すれば良い
+#sh(bash){{
+NVCC <file>.cu
+}}
+
+
+*CUDNNのインストール
+CUDNN = CUDA Deep Neural Network
+CUDAのディープラーニングのため専用の高速化ライブラリ。
+[[CUDNN公式ダウンロード:https://developer.nvidia.com/cuDNN]]へいって、ダウンロードする。
+そのままではダウンロードできないので、まずは登録する(登録しても、3日くらい審査があるのですぐには落とせない)
+[[登録してもインストールできない:https://groups.google.com/forum/#!topic/caffe-users/5ItJUm5FVTA]]
+~
+Makefile.configを開いて、USE_CUDNNの行をアンコメントすれば使えるようになる。
+#sh(bash){{
+USE_CUDNN := 1
+}}
+*BLASインストール
+Basic Linear Algebra Subprograms
+ベクトルや行列計算を行う線形代数のライブラリの規格。
+Level1=スカラー×ベクトル演算
+Level2=ベクトル×行列演算
+Level3=行列×行列演算
+を定義したもので、複雑な演算を高速で行ってくれる。
+一般的な実装ではFORTRANで書かれているが、
+専用のモジュールでCやC++からからFORTRANを呼び出せる。
+BLASを実装したライブラリは、ATLASが最も高速で一般的に使われ、CaffeeでもATLASを推奨してる。
+
+**ATLASのインストール
+ATLASの公式サイトからソースをダウンロードして解凍。
+[[ATLAS公開ソース:http://sourceforge.net/projects/math-atlas/files/Stable/]]
+~
+
+**OpenBLASのインストール
+ATLASが上手くいかない場合はOpenBLASを導入してみる
+#sh(bash){{
+brew install homebrew/science/openblas
+}}
+ただし、OpenBLASを導入した場合、後々Caffeコンパイル時に、Makefile.configを編集して、BLAS:=open
+の行を書き直す必要がある(BLASはデフォルトでatlasになっているので)
+~
+*Gflagsインストール
+Googleが公開している、コマンドライン引数を処理するライブラリ
+Google社内でも使われており、新人研修で最初に覚えるツール
+#sh(bash){{
+brew install --fresh -vd flgas
+}}
+~
+
+*Glog
+C++でログを取るライブラリ
+Gflagsを依存する
+#sh(bash){{
+brew install --fresh -vd glog
+}}
+~
+
+*Snappy
+Googleのデータ圧縮解凍用ライブラリ
+#sh(bash){{
+brew install --fresh -vd protobuf
+}}
+~
+
+*Leveldb
+Googleが公開している高速データベース
+snappyに依存する
+#sh(bash){{
+brew install --fresh -vd leveldb
+}}
+~
+
+*HDF5
+時系列に変化するビッグデータ(人口分布等)を効率良く1つのファイルに格納するためのデータ構造
+#sh(bash){{
+brew install --fresh -vd hdf5
+}}
+~
+
+*Lmdb
+メモリ上でデータベースを操作するライブラリ
+#sh(bash){{
+brew install --fresh -vd lmdb
+}}
+~
+
+*Szip
+ファイル圧縮アルゴリズム
+#sh(bash){{
+brew install --fresh -vd szip
+}}
+
+*Protobuf
+Googleのデータ互換するためのデータ構造
+pythonに依存するので、--with-pythonが必要
+#sh(bash){{
+brew install --build-from-source --fresh -vd --with-python protobuf
+}}
+~
+
+
+*boostとboost-python
+C++で書いたモジュールを、簡単にPython用モジュールに変換するライブラリ。
+どうやら最新版だとコンパイル通らないので、以前のバージョンのソースを取って来てコンパイルする必要がある。
+#sh(bash){{
+brew uninstall boost boost-python
+cd $(brew --prefix)
+git checkout ab47508 Library/Formula/boost.rb
+git checkout 3141234 Library/Formula/boost-python.rb
+brew install --build-from-source --fresh -vd boost boost-python
+brew pin boost
+brew pin boost-python
+}}
+~
+*Caffe本体のインストール
+/usr/local/にいって、GithubからCaffeをクローンしてくる
+[[Caffe on Github:https://github.com/BVLC/caffe]]
+#sh(bash){{
+cd /usr/local/
+git clone https://github.com/BVLC/caffe.git
+}}
+~
+
+caffe/python/へ移動して、requirements.txtというファイルを探す(caffeのバージョンごとに違う)
+このファイルにはpipでインストールすべき依存パッケージが書かれているので、pipを実行して一気にインストール
+ちなみにこれは後々pycaffeをビルドする時の依存パッケージなので、pythonからcaffe叩かないなら不要
+#sh(bash){{
+find . -iname "requirements.txt"
+cd python
+sudo pip install -r python/requirements.txt
+}}
+~
+
+makefileのコピーを作って、中身を書き換えてmakeを実行。
+#sh(bash){{
+cd /usr/local/caffe/
+cp Makefile.config.example Makefile.config
+subl Makefile.config
+...いろいろ書き換える
+}}
+~
+
+make allを実行する
+#sh(bash){{
+make all -j32
+}}
+※このやり方だと後々make runtestする時どうやってもリンクが通らないので、
+Makefile.configを書き換えた後、次のCMakeを使う方法でビルドする。
+#sh(bash){{
+mkdir build
+cd build/
+make clean
+cmake -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Headers ..
+make all -j32
+}}
+~
+
+
+*Run test
+makeがうまくいったら、runtestを実行してみる。
+#sh(bash){{
+make test -j32
+make runtest -j32
+}}
+
+最後まで実行できればOK。2 DISABLED TESTSみないなのが表示されても問題ない。
+~
+
+*Pythonからcaffeを使えるようにする
+caffeのコンパイル&runtestが全て無事に終わったら、Pythonからcoffeを叩けるようにする。
+まずはpycaffeが依存するパッケージを全部予めインストールしておく必要がある。
+依存するものは全て/path/to/python/requirements.txtに書かれてるので、pip install -rで一括インストールする。
+#sh(bash){{
+sudo pip install -r /path/to/python/requirements.txt
+}}
+~
+
+cd <caffe-home>でpycaffeをコンパイルする。
+#sh(bash){{
+make pycaffe
+}}
+~
+
+.zshrcを開いて、PYTHONPATHが<caffe-home>/python/を参照するようにする。
+#sh(bash){{
+export PYTHONPATH=/usr/local/python:$PYTHONPATH
+}}
+~
+
+ここまで行ったら、pythonかipythonの対話モードを立ち上げて、
+#sh(bash){{
+import caffe
+}}
+を実行してみる。問題がなければ環境構築成功。
+segmentation faultが起きる場合は、OSXのpythonとbrewのpythonの優先順位問題なので、エラーを参照。
+~
+*Caffeの使い方
+[[公式Githubアカウント:https://github.com/BVLC/caffe]]
+[[Caffeで象の画像を分類:http://qiita.com/Bonnnou_108/items/41e6dadeff1310b4eb5d]]
+[[参考サイト:http://d.hatena.ne.jp/muupan/20141010/1412895321]]
+[[参考サイト2:http://techblog.yahoo.co.jp/programming/caffe-intro/]]
+*Error: 'cblas.h' file not  found
+[[参考記事:https://github.com/BVLC/caffe/issues/617]]
+findでcbals.hの場所を見つけて、Makefile.configの編集でBLAS_INCLUDEの行とBLAS_LIBの行を
+アンコメントしてそのパスを追加
+#sh(bash){{
+find / -iname "cblas.h"
+BLAS_INCLUDE :=/usr/local/Cellar/openblas/0.2.14_1/include/
+BLAS_LIB := /usr/local/Cellar/openblas/0.2.14_1/lib
+}}
+~
+
+*Error: NVCC stepsで止まる
+/usr/local/include/boost/smart_ptr/detail/sp_counted_base_clang.hpp(27)
+から始まる100個以上のエラーが出る場合は、boostのバージョンの問題の可能性がある。
+boost最新バージョンの1.58だとエラーが出るので1.57へダウングレードする。
+[[参考記事:http://itinerantbioinformaticist.blogspot.jp/2015/05/caffe-incompatible-with-boost-1580.html]]
+[[参考記事:https://groups.google.com/forum/#!topic/caffe-users/fY2r6bO3_0w]]
+~
+まずは古いboostとboost-pythonをアンインストールしてから、brewのhome(/usr/loca/)に移動して
+boost.rbとboost-python.rbのリンクを以前のgitバージョンに戻す(checkout ハッシュを使う)
+以前のバージョンをソースコンパイルでインストールしてpinでバージョン固定させる
+#sh(bash){{
+brew uninstall boost boost-python
+cd $(brew --prefix)
+git checkout ab47508 Library/Formula/boost.rb
+git checkout 3141234 Library/Formula/boost-python.rb
+brew install --build-from-source --fresh -vd boost boost-python
+brew pin boost
+brew pin boost-python
+}}
+~
+
+*Error: Undefined symbols for architecture x86_64
+[[参考記事:https://github.com/BVLC/caffe/issues/617]]
+
+
+リンク時にこのエラーが出た場合は、libstdc++でコンパイルされたパッケージと、
+libc++でコンパイルされたパッケージの衝突が原因。どちらかに統一しないといけない
+brew uninstallして、一度make cleanで不要ファイル削除してから再度installで試してみる。
+|   パッケージ      |    リンクライブラリ  |
+|    CUDA6以前   |     libstdc++           |
+|    CUDA7以降   |      libc++               |
+|  mac10.9以降   |    デフォでlibc++     |
+~
+
+caffeのリンクライブラリの設定は '''caffe/build/CMakeCache.txt'''で変更できる。次の行をアンコメントすると、
+libstdc++を一切使用しなくなる。[[参考記事:https://groups.google.com/forum/#!topic/caffe-users/G7gj03A-JPw]]
+#sh(bash){{
+USE_libstdcpp:BOOL=FALSE
+}}
+~
+
+'''caffe/Makefile'''内でも、clang++かlibstdc++かの指定場所がある、デフォでclang++
+#sh(bash){{
+CXX := /usr/bin/clang++
+ifneq ($(CPU_ONLY), 1)
+	CUDA_VERSION := $(shell $(CUDA_DIR)/bin/nvcc -V | grep -o 'release \d' | grep -o '\d')
+	ifeq ($(shell echo $(CUDA_VERSION) \< 7.0 | bc), 1)
+		CXXFLAGS += -stdlib=libstdc++
+		LINKFLAGS += -stdlib=libstdc++
+	endif
+}}
+~
+
+'''caffe/Makefile.config'''内で、CUSTOM_CXX := clang++の部分が関係する
+~
+
+*Error: Mac10.9以降(lib++)とCUDA6以前(libstdc++)のリンクエラー
+※Mac10.9以降で、CUDA7以上を使ってるなら不要
+OS10.9以降だと、デフォトのC++コンパイラはclang++で、リンク時にlibc++ライブラリを使うようになった。
+しかしNVIDIA CUDA(6以前)はlibstdc++をリンクしてる。ゆえに、CUDA依存のパッケージをデフォルトのfomulaで
+インストールしてしまうとlibc依存になってて、libstdc++依存のCUDAとうまくリンクできない。
+そこで、CUDA依存のパッケージのfomulaを全て書き換えて、libstdc++でリンクするようにする。
+※ただし、CUDA7以降ならばこれは不要
+~
+まずはbrew editで依存パッケージ全てのfomulaを順番に開く
+#sh(bash){{
+for x in snappy leveldb protobuf gflags glog szip boost boost-python lmdb homebrew/science/opencv; do brew edit $x; done
+}}
+~
+
+def installの部分に以下の行を追加する
+#sh(bash){{
+def install
+      # ADD THE FOLLOWING:
+      ENV.append "CXXFLAGS", "-stdlib=libstdc++"
+      ENV.append "CFLAGS", "-stdlib=libstdc++"
+      ENV.append "LDFLAGS", "-stdlib=libstdc++ -lstdc++"
+      # The following is necessary because libtool likes to strip LDFLAGS:
+      ENV["CXX"] = "/usr/bin/clang++ -stdlib=libstdc++"
+      ...
+}}
+~
+
+保存したら、全てのパッケージをアンインストールして、再度ソースからコンパイルする方式でインストール
+#sh(bash){{
+for x in snappy leveldb gflags glog szip lmdb homebrew/science/opencv; do brew uninstall $x; brew install --build-from-source --fresh -vd $x; done
+brew uninstall protobuf; brew install --build-from-source --with-python --fresh -vd protobuf
+brew install --build-from-source --fresh -vd boost boost-python
+}}
+~
+
+しかしこのままだとbrew updateができなくなる(brewのfomulaディレクトリはgitでバージョン管理されてる)ので、
+手動で変更したfomulaを別ブランチとしてcommitしておく
+#sh(bash){{
+cd /usr/local
+git checkout -b caffe
+git add .
+git commit -m "Update Caffe dependencies to use libstdc++"
+cd /usr/local/Library/Taps/homebrew/homebrew-science
+git checkout -b caffe
+git add .
+git commit -m "Update Caffe dependencies"
+}}
+~
+
+brew updateは常にmasterブランチで行い、update後はcaffe専用ブランチにチェックアウトしてrebaseする。
+これをいちいち手動でやるのは面倒なので、シェルスクリプトで定義しておくと楽
+#sh(bash){{
+# Switch batch to homebrew master branches
+cd /usr/local
+git checkout master
+cd /usr/local/Library/Taps/homebrew/homebrew-science
+git checkout master
+
+# Update homebrew; hopefully this works without errors!
+brew update
+
+# Switch back to the caffe branches with the formulae that you modified earlier
+cd /usr/local
+git rebase master caffe
+# Fix any merge conflicts and commit to caffe branch
+cd /usr/local/Library/Taps/homebrew/homebrew-science
+git rebase master caffe
+# Fix any merge conflicts and commit to caffe branch
+# Done!
+}}
+~
+
+*Error: import caffe時に起こるsegmentation fault
+[[参考記事:https://github.com/BVLC/caffe/issues/591]]
+コンパイル中、Caffeをリンクする時に、Mac OS Xにデフォで入ってるlibpythonにリンクしに行ってるのが原因
+brewなどでインストールした新しいバージョンのpythonでimportするとクラッシュする。
+~
+
+Makefile.configを手動で書き換える場合は、PYTHON_LIBとPYTHON_INCLUDEをbrewでインストールした
+新しいpythonのパスに書き換える
+#sh(bash){{
+# PYTHON_LIB := /usr/lib
+PYTHON_LIB := /usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Versions/2.7/lib
+}}
+#sh(bash){{
+# PYTHON_INCLUDE := /usr/include/python2.7 \
+		/usr/lib/python2.7/dist-packages/numpy/core/include
+PYTHON_INCLUDE := /usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Versions/2.7/include/python2.7 \
+                /usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/numpy/core/include
+}}
+ちなみにデフォルトの値は、
+|/usr/lib/python2.7| /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7|
+|/usr/include/python2.7 |/System/Library/Frameworks/Python.framework/Versions/2.7/include/|
+|brew管理下のlib|/usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Versions/2.7/lib/python2.7|
+|brew管理下のinclude|/usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Versions/2.7/include/python2.7|
+
+へのリンクになってる。リンクはls -alで確認可能。
+~
+
+cmakeする場合は、PYTHON_LIBRARYとPYTHON_INCLUDE_DIRが両方とも、
+最新版のライブラリとリンクするように、-Dオプションで強制的に書き換える。
+#sh(bash){{
+cmake -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Headers ..
+}}
+~
+
+pythonコマンドの実行の優先順位を変えたい場合は、/etc/pathsの優先順位を編集する
+ちなみに、which pythonで現在の最も優先順位の高いpythonを確認できる。
+/usr/bin/pythonになってたら、OSデフォのpython。/usr/local/bin/python/ならbrewで入れたpython
+#sh(bash){{
+sudo vim /etc/paths
+}}
+を実行して、/usr/local/binが/usr/binより上になるように書き換えれば、brew版が優先される。
+#sh(bash){{
+/usr/local/bin ←/usr/binより上に記述
+/usr/bin
+/bin
+/usr/sbin
+/sbin
+}}
+~
+*Error:make runtestでリンク通らない時はCMakeを使う
+Makefile.configを手動で書き換える方法はどうやってもmake runtestが通らないので、
+cmakeコマンドでMakefileを生成させる方法を試す。
+
+#sh(bash){{
+cd build/
+make clean
+cmake -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.10/Frameworks/Python.framework/Headers ..
+make all
+}}
+~
+*Error: string.h not found
+xcodeのコマンドラインツールをインストールしていないと良く出るエラーらしい
+[[fatal error: 'string.h' file not found:https://groups.google.com/forum/#!topic/torch7/imRsOfJgVZY]]
+xcodeコマンドラインを強制的に立ち上げるコマンドを入力して、インストールウィンドウから入れれば解決
+#sh(bash){{
+xcode-select --install
+}}
+~

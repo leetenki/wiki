@@ -1,0 +1,14 @@
+ [[OS]]
+ 
+ *X11(XQuartz)とは
+-MacはUNIX基盤だが、GUIデスクトップ環境だけはAquaというApple独自の技術で作られてるOS
++MacはUNIX基盤だが、GUIデスクトップ環境だけはAquaというApple独自の技術で作られてる機能を使う。
+ UNIX系のOSでは一般的にCUIのみで動作し、GUIアプリを動かしたい時はX Windowという機能を使う。
+ X WindowとAquaは互換性がなく、AquaはMacに対応したGUIアプリしか動かないので、
+ 例えばMacでUNIX系のGUIアプリ(Gimp等)を使いたい時にAquaとUNIX基盤だけでは動かない。
+ そこで、UNIXのX WindowシステムをMacでも使えるようにしたのがX11というもの。
+-ゆえに、MacでUNIX用のGUIアプリを動かす時はX11を、Mac用のGUIアプリを動かす時はAquaを起動する事、
+-十何に対応できる。X11はオープンソースなので、自由にダウンロードしてインストールできる。
++ゆえに、MacでUNIX用のGUIアプリを動かす時はX11を、Mac用のGUIアプリを動かす時はAquaを立ち上げる事で
++柔軟に対応できる。X11はオープンソースなので、自由にダウンロードしてインストールできる。
+ [[XQuartzダウンロード:http://xquartz.macosforge.org/trac/wiki/X112.7.7]]

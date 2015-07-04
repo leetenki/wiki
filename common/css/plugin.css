@@ -1,0 +1,507 @@
+@charset "UTF-8";
+
+/* ------------------------------------------------------------
+
+	filename:	plugin.css
+	created:	091122
+	update:		091122
+	copyright:	(c)2008 kazuwaya All rights reserved.
+	
+	thickbox.css
+	markitup.css
+	ajaxtree.css
+	pukiwiki-original.css
+	
+------------------------------------------------------------ */
+
+/* ------------------------------------------------------------
+//
+//	thickbox.css
+//	
+// ------------------------------------------------------------ */
+#TB_overlay {
+	position: fixed;
+	z-index:100;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 100%;
+}
+
+.TB_overlayMacFFBGHack { background: url(../images/bg-hack.png) repeat;}
+.TB_overlayBG {
+	background-color: #000;
+	filter: alpha(opacity=30);
+	-moz-opacity: 0.30;
+	opacity: 0.30;
+}
+
+* html #TB_overlay {
+     position: absolute;
+     height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}
+
+#TB_window {
+	position: fixed;
+	background: #FFF;
+	z-index: 102;
+	color: #000000;
+	display: none;
+	text-align:left;
+	top: 50%;
+	left: 50%;
+	background-image: url(../images/bg-layer.png);
+	background-position: left bottom;
+	background-repeat: repeat-x;
+	-webkit-box-shadow: 0 4px 16px #333;
+	-moz-box-shadow: 0 4px 16px #333;
+}
+
+* html #TB_window {
+	position: absolute;
+	margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+	border: 2px solid #333;
+}
+
+*:first-child+html #TB_window { border: 2px solid #333; }
+
+html>/**/body #TB_window { border: 2px solid #333\9; }
+
+#TB_window img#TB_Image {
+	display: block;
+	margin: 15px 0 0 15px;
+	border: 1px solid #ccc;
+}
+
+#TB_caption{
+	height: 25px;
+	padding: 7px 30px 10px 25px;
+	float: left;
+	font-size: 120%;
+}
+
+#TB_closeWindow{
+	height: 25px;
+	padding: 11px 25px 10px 0;
+	float: right;
+	font-size: 120%;
+}
+
+#TB_closeAjaxWindow{
+	padding: 7px 10px 5px 0;
+	margin-bottom: 1px;
+	text-align: right;
+	float:right;
+}
+
+#TB_ajaxWindowTitle{
+	float: left;
+	padding: 7px 0 5px 10px;
+	margin-bottom: 1px;
+}
+
+#TB_title{
+/*	background-color: #e8e8e8;*/
+	height: 27px;
+}
+
+#TB_ajaxContent{
+	clear: both;
+	padding: 2px 15px 15px 15px;
+	overflow: auto;
+	text-align: left;
+	line-height: 1.4em;
+}
+
+#TB_ajaxContent.TB_modal{ padding: 15px; }
+
+#TB_ajaxContent p{ padding:5px 0px 5px 0px; }
+
+#TB_load{
+	position: fixed;
+	display:none;
+	height:13px;
+	width:208px;
+	z-index:103;
+	top: 50%;
+	left: 50%;
+	margin: -6px 0 0 -104px; /* -height/2 0 0 -width/2 */
+}
+
+* html #TB_load {
+ position: absolute;
+ margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+}
+
+#TB_HideSelect{
+	z-index:99;
+	position:fixed;
+	top: 0;
+	left: 0;
+	background-color:#fff;
+	border:none;
+	filter:alpha(opacity=0);
+	-moz-opacity: 0;
+	opacity: 0;
+	height:100%;
+	width:100%;
+}
+
+* html #TB_HideSelect {
+     position: absolute;
+     height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}
+
+#TB_iframeContent {
+	clear: both;
+	border: none;
+	margin-bottom: -1px;
+	margin-top: 1px;
+}
+
+* html #TB_iframeContent { margin-bottom:1px; }
+
+/* -------------------------------------------------------------------
+// markItUp! Universal MarkUp Engine, JQuery plugin
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+div#mainContents div.markItUp { border: 4px solid #EEE; }
+
+div#mainContents div.markItUpContainer {
+	border: 1px solid #666;
+	background: #FFF url(../images/editor/bg-container.png) repeat-x top left;
+	padding: 0 4px 2px 4px;
+}
+
+/* wikiボタン */
+div#mainContents div.markItUpHeader ul { padding: 7px 0 8px 0; }
+
+* html div#mainContents div.markItUpHeader ul { padding-top: 6px; }
+
+*:first-child+html div#mainContents div.markItUpHeader ul { padding-top: 6px; }
+
+div#mainContents div.markItUpHeader ul li {
+	list-style: none;
+	float: left;
+	position: relative;
+	background-image: none;
+	padding: 0 8px 0 0;
+}
+
+div#mainContents div.markItUpHeader ul li a {
+	display: block;
+	width: 16px;
+	height: 16px;
+	text-indent: -10000px;
+	background-image: url(../images/editor/bg-menu.png);
+	background-position: left top;
+	background-repeat: no-repeat;
+	overflow: hidden;
+}
+
+div#mainContents div.markItUpHeader ul li.markItUpButton3,
+div#mainContents div.markItUpHeader ul li.markItUpButton6,
+div#mainContents div.markItUpHeader ul li.markItUpButton8,
+div#mainContents div.markItUpHeader ul li.markItUpButton10 {
+	border-right: 1px solid #CCC;
+	margin-right: 8px;
+}
+
+div#mainContents div.markItUpHeader ul li.markItUpButton2 a { background-position: -24px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton3 a { background-position: -48px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton4 a { background-position: -80px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton5 a { background-position: -104px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton6 a { background-position: -128px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton7 a { background-position: -160px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton8 a { background-position: -186px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton9 a { background-position: -218px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton10 a { background-position: -242px top;  }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton11 a { background-position: -274px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton12 a { background-position: -298px top; }
+
+div#mainContents div.markItUpHeader ul li.markItUpButton13 { display: none; }
+
+/* テキストエリア */
+div#mainContents textarea.markItUpEditor {
+	width: 684px;
+	margin: 0!important;
+	padding: 8px;
+	border: 1px solid #666;
+	height: 320px;
+	background-image: url(../images/editor/bg-editor.png);
+	background-repeat: repeat-x;
+	clear: both;
+	overflow: auto;
+	line-height: 1.5;
+}
+
+* html div#mainContents textarea.markItUpEditor { width: 702px; }
+
+/* フッタ */
+div#mainContents div.markItUpFooter {
+	cursor: n-resize;
+	text-align: center;
+}
+
+div#mainContents div.markItUpResizeHandle {
+	overflow: hidden;
+	width: 22px;
+	height: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	background-image: url(../images/editor/handle.png);
+	cursor:n-resize;
+}
+
+/* ------------------------------------------------------------
+//
+//	ajaxtree.css
+//	
+// ------------------------------------------------------------ */
+
+/* ajaxtree.inc.php */
+div#subContents div#ajaxtree {
+	margin-bottom: 16px;
+	overflow: hidden;
+}
+
+div#subContents div#ajaxtree dl dt,
+div#subContents div#ajaxtree ul {
+	background-color: #EFEFEF;
+	margin-bottom: 0;
+}
+
+div#subContents div#ajaxtree dl dt,
+div#subContents div#ajaxtree ul li {
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #CCC;
+	background-image: none;
+	padding-left: 16px;
+	background-image: url(../images/bg-mark-leaf.gif);
+	background-position: 4px 6px;
+	background-repeat: no-repeat;
+}
+
+div#subContents div#ajaxtree a,
+div#subContents div#ajaxtree span.current {
+	display: block;
+	padding: 2px 0 2px 0;
+}
+
+* html div#subContents div#ajaxtree a,
+* html div#subContents div#ajaxtree span.current { height: 1px; }
+
+div#subContents div#ajaxtree ul li.collapsed { background-image: url(../images/bg-mark-collapsed.gif); }
+
+div#subContents div#ajaxtree ul li.expanded { background-image: url(../images/bg-mark-expanded.gif); }
+
+/* 第二階層 */
+div#subContents div#ajaxtree dl dt { margin-bottom: 4px; }
+
+/* 第三階層 */
+div#subContents div#ajaxtree ul li ul li {
+	background-color: #D9D9D9;
+	border: 0;
+}
+
+
+/* ------------------------------------------------------------
+
+	column.css
+	
+------------------------------------------------------------ */
+
+/* ------------------------------------------------------------ カラムセット */
+div.locator { clear: both; }
+
+div.column3A,
+div.column3B,
+div.column4A,
+div.column4B,
+div.column4C { float: left; }
+
+div.column3A { width: 33.33%; }
+
+div.column3B { width: 66.66%; }
+
+div.column4A { width: 25%; }
+
+div.column4B { width: 50%; }
+
+div.column4C { width: 75%; }
+
+/* カラムの入れ子 */
+div.column3A div.column3A,
+div.column3B div.column3B,
+div.column4A div.column4A,
+div.column4B div.column4B,
+div.column4C div.column4C { width: 100%; }
+
+div.column3B div.column3A,
+div.column4B div.column4A { width: 50%; }
+
+* html div.column3B div.column3A,
+* html div.column4B div.column4A { width: 49.99%; }
+
+div.column4C div.column4A { width: 33.33%; }
+
+div.column4C div.column4B { width: 66.66%; }
+
+/* ------------------------------------------------------------ プリント */
+@media print{
+	
+div.column3A { width: 33%; }
+
+div.column3B { width: 66%; }
+
+div.column4A { width: 24.9%; }
+
+div.column4B { width: 49.9%; }
+
+div.column4C { width: 74.9%; }
+
+div.column3A div.column3A,
+div.column3B div.column3B,
+div.column4A div.column4A,
+div.column4B div.column4B,
+div.column4C div.column4C { width: 99.9%; }
+
+div.column3B div.column3A,
+div.column4B div.column4A { width: 49.8%; }
+
+div.column4C div.column4A { width: 33.2%; }
+
+}
+/* ------------------------------------------------------------ clearfix */
+div.locator:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+div.locator { display: inline-table; }
+
+* html div.locator { height: 1%; }
+
+div.locator {
+	display: block;
+	zoom: 1;
+}
+
+/* ------------------------------------------------------------
+//
+//	pukiwiki-original.css
+//	
+// ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------ attach.inc.php */
+div#mainContents div.img_margin { margin: 0 16px 8px 16px; }
+
+div#mainContents div.img_margin img {
+	border: 1px solid #CCC;
+	padding: 8px;
+}
+
+/* ------------------------------------------------------------ contents.inc.php */
+div#mainContents div.contents ul ul { margin-top: 0; }
+
+div#mainContents div.contents ul li {
+	background-image: url(../images/bg-mark-links-down.gif);
+	background-position: 0.1em 0.4em;
+	white-space: nowrap;
+	margin-right: 16px;
+}
+
+div#mainContents div.contents ul li li { float: left; }
+
+div#mainContents div.contents ul li ul { margin-left: 16px; }
+
+/* ------------------------------------------------------------ counter2.inc.php */
+div#mainContents table#calendar2,
+div#mainContents table#calendar2 table { width: auto; }
+
+div#mainContents table#calendar2 th,
+div#mainContents table#calendar2 td {
+	background: transparent;
+	border: none;
+}
+
+div#mainContents table#calendar2 table.style_calendar th,
+div#mainContents table#calendar2 table.style_calendar td {
+	font-size: 83.33%;
+	background-color: #EFEFEF;
+	text-align: center;
+}
+
+div#mainContents table#calendar2 table.style_calendar { margin-left: 0; }
+
+div#mainContents table#calendar2 table.style_calendar td.style_td_today { background-color: #C90066; }
+
+div#mainContents table#calendar2 table.style_calendar td.style_td_today a { color: #FFF; }
+
+/* ------------------------------------------------------------ edit.inc.php */
+div#mainContents div.edit_form {
+	font-size: 120%;
+	margin: 0 16px 16px 0;
+}
+
+div#mainContents div.edit_form * { font-size: 100%; }
+
+div#mainContents div.edit_form input,
+div#mainContents div.edit_form textarea { margin-bottom: 8px; }
+
+/* ------------------------------------------------------------ tag.inc.php */
+div#subContents div.htmltagcloud {
+	background-color: #EFEFEF;
+	margin: 8px;
+}
+
+/* tag */
+div#mainContents p span.tag {
+	display: block;
+	border: 1px dotted #000;
+	padding: 4px;
+}
+
+/* diff.inc.php */
+span.diff_added {
+	color:blue;
+	background-color:inherit;
+}
+
+span.diff_removed {
+	color:red;
+	background-color:inherit;
+}
+
+/* ------------------------------------------------------------ クリアフィックス */
+div#mainContents div.contents ul ul:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+div#mainContents div.contents ul ul { display: inline-table; }
+
+* html div#mainContents div.contents ul ul { height: 1%; }
+
+div#mainContents div.contents ul ul {
+	display: block;
+	zoom: 1;
+}
+
+/* EOF */

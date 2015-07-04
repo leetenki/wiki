@@ -1,0 +1,37 @@
+ [[Ruby/TechAcademy]]
+ 
+ *エディタは何が良いか？
+ *開発環境はどうするのか
+ *汎用レイアウト集が欲しい
+ *セキュリティの強いログインシステムを作りたい
+ *目次と連動するようなWebページを作りたい。
+ *BASIC認証とクッキー認証の違い
+ *wgetでhtmlツリーを落とせない
+ wget --keep-session-cookies --save-cookies=cookies.txt --post-data="session[email]=toukyouniversityoftechnology@gmail.com&session[password]=c2akvuns" https://my.techacademy.jp/login.rb
+ 
+ wget --load-cookies cookies.txt -r -k -E  https://my.techacademy.jp/
+ 
+ *utf-8とは、文字コードとは
+ *html langの違い
+ *RUN一回ごとにapache再起動してるんですか？
+ *cloud9サーバーの仕組み
+ *apacheの設定ファイルとか見れたりする？
+ *git
+ *apache設定の権限の仕組み
+ 
+ *11.5 マウスオーパーになってる
+ 
+ *session[]のカッコってなに？
++ruby on reils特有の書き方らしい。postやget送る時もそのままsession[name]=leeみたいに送ってるらしい。
+ 
++
++reils
++開発速度重視
++
++
++地図のAPIを使う。
++reilsAPIを使ったサービス
++
++を考えながらオリジナルのアプリケーション
++node.js
++

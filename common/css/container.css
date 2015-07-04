@@ -1,0 +1,494 @@
+@charset "utf-8";
+
+/* ------------------------------------------------------------
+   
+	filename:	container.css
+	created:	071108 
+	update:		080709
+	copyright:	(c)2008 kazuwaya All rights reserved.
+	
+	01. Heading Elements
+	02. Paragraph Elements
+	03. List Elements
+	04. Table Elements
+	05. nav Elements
+	06. Etc Elements
+	10. Clearfixes
+			  
+   ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------ レイアウト */
+div#mainContents h1,
+div#mainContents h2,
+div#mainContents h3,
+div#mainContents h4,
+div#mainContents h5,
+div#mainContents h6,
+div#mainContents table,
+div#mainContents hr { clear: both; }
+
+/* ------------------------------------------------------------ 01. Heading Elements */
+/* -------------------- h1 */
+div#mainContents h1 {
+	font-size: 220%;
+	font-weight: bold;
+}
+
+div#mainContents h1 a { font-weight: bold; }
+
+div#mainContents div.articleInfo {
+	border-top: 1px dotted #333;
+	border-bottom: 1px dotted #333;
+	margin: -4px 16px 16px 0;
+	padding: 2px 8px;
+}
+
+div#mainContents div.articleInfo p {
+	font-size: 100%;
+	float: left;
+	margin: 0;
+	padding-top: 3px;
+}
+
+div#mainContents div.articleInfo ul {
+	float: right;
+	margin: 0;
+}
+
+div#mainContents div.articleInfo ul li {
+	display: inline;
+	padding: 0;
+}
+
+/* -------------------- h2 */
+div#mainContents h2 {
+	padding: 4px 8px 1px 8px;
+	border: 1px solid #000;
+	font-size: 140%;
+	font-weight: bold;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	position: relative;
+	z-index: 0;
+}
+
+div#mainContents h2 a.secEdit {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+
+* html div#mainContents h2 a.secEdit {
+	top: 0;
+	right: 24px;
+}
+
+*:first-child+html div#mainContents h2 a.secEdit {
+	top: 2px;
+	right: 8px;
+}
+
+div#subContents h2 {
+	border-bottom: 1px dotted #000;
+	font-weight: bold;
+}
+
+div#mainContents h2 a { font-weight: bold; }
+
+/* -------------------- h3 */
+div#mainContents h3 {
+	padding: 2px 8px;
+	font-size: 140%;
+	font-weight: bold;
+	border-bottom: 1px dotted #000;
+}
+
+div#subContents h3 { font-weight: bold; }
+
+/* -------------------- h4 */
+div#mainContents h4 {
+	padding: 0 8px;
+	font-size: 140%;
+	font-weight: bold;
+}
+
+div#mainContents h4 a { font-weight: bold; }
+
+/* -------------------- h5,h6 */
+div#mainContents h5,
+div#mainContents h6 {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+div#mainContents h5 a,
+div#mainContents h6 a { font-weight: bold; }
+
+/* -------------------- 暫定 */
+div#mainContents h3 a img,
+div#mainContents h4 a img,
+div#mainContents h5 a img,
+div#mainContents h6 a img { display: none; }
+
+/* ------------------------------------------------------------ 02. paragraph Elements */
+div#mainContents p#topicPath { font-size: 100%; }
+
+div#mainContents pre {
+	background-color: #EFEFEF;
+	overflow: auto;
+	padding: 8px;
+	border-left: 4px solid #CCC;
+}
+
+div#mainContents blockquote {
+	background-color: #EFEFEF;
+	background-image: url(../images/bg-blockquote.gif);
+	background-position: 4px 4px;
+	background-repeat: no-repeat;
+	padding: 4px;
+	padding-left: 16px;
+}
+
+/* ------------------------------------------------------------ 03. List Elements */
+div#mainContents ul li,
+div#subContents ul li {
+	padding-left: 16px;
+	background-image: url(../images/bg-mark-list.gif);
+	background-position: 0.1em 0.2em;
+	background-repeat: no-repeat;
+}
+
+/* -------------------- 定義リスト */
+div#mainContents div.inner dl { border-bottom: 1px solid #CCC; }
+
+div#mainContents div.inner dl dt,
+div#mainContents div.inner dl dd {
+	border-top: 1px solid #CCC;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+div#mainContents div.inner dl dt {
+	width: 16em;
+	float: left;
+}
+
+div#mainContents div.inner dl dd { margin-left: 16em; }
+
+div#mainContents ol li {
+	margin-left: 1.6em;
+	list-style: decimal;
+}
+
+div#mainContents ol.alpha li { list-style: lower-alpha; }
+
+/* -------------------- リストの入れ子 */
+div#mainContents dl dd ul { margin-bottom: 0; }
+
+div#mainContents ul ol li,
+div#mainContents ul ul li,
+div#mainContents ol ul li,
+div#mainContents ol ul li {
+	margin-left: 0;
+	list-style: none;
+}
+
+div#mainContents ul ol li {
+	background-image: none;
+	list-style: decimal;
+	padding-left: 0;
+	margin-left: 1.5em;
+}
+
+div#mainContents ul ol ul li {
+	margin-left: 0;
+	list-style: none;
+	padding-left: 16px;
+	background-image: url(/common/images/bg-mark-list.gif);
+}
+
+div#mainContents ul ol,
+div#mainContents ul ul,
+div#mainContents ol ul,
+div#mainContents ol ol { margin-bottom: 0; }
+
+/* -------------------- 注釈 */
+div#mainContents ol.notes {
+	border: 1px dotted #000;
+	padding: 4px;
+}
+
+div#mainContents ol.notes li {
+	padding-left: 1.6em;
+	text-indent: -1.6em;
+}
+
+div#mainContents ol.notes li {
+	background-image: none;
+	list-style: none;
+	margin-left: 0;
+}
+
+div#mainContents table ol.notes li { font-size: 83%; }
+
+div#mainContents ol.notes li.nthChild {
+	padding-left: 0.5em;
+	text-indent: -2.3em;
+}
+
+/* ------------------------------------------------------------ 04. Table Elements */
+div#mainContents table { border: none; }
+
+div#mainContents table th,
+div#mainContents table td {
+	border-left: 1px solid #CCC;
+	padding: 2px 4px;
+}
+
+div#mainContents table th { border-left: 3px solid #CCC; }
+
+div#mainContents table th:first-child,
+div#mainContents table td:first-child { border-left: none; }
+
+div#mainContents table th.firstChild,
+div#mainContents table td.firstChild { border-left: none; }
+
+div#mainContents table td { vertical-align: top; }
+
+div#mainContents table thead th,
+div#mainContents table thead td {
+	background-color: #999;
+	color: #FFF;
+}
+
+div#mainContents table tbody tr.odd td { background-color: #E1E1E1; }
+
+div#mainContents table tbody tr.odd th { background-color: #D1D1D1; }
+
+div#mainContents table tbody tr.even td { background-color: #F5F5F5; }
+
+div#mainContents table tbody tr.even th { background-color: #E5E5E5; }
+
+/* ------------------------------------------------------------ 05.nav element */
+/* -------------------- レイアウト */
+div#mainContents ul.linearNav,
+div#mainContents ul.indexNav,
+div#mainContents ul.contentsNav { margin-left: 16px; }
+
+div#mainContents ul.linearNav,
+div#mainContents ul.indexNav,
+div#mainContents ul.contentsNav,
+dl.info,
+p.learnMore,
+p.back,
+p.totop { clear: both; }
+
+/* -------------------- インデックスナビ */
+ul.indexNav li {
+	float: left;
+	margin-bottom: 2px;
+	overflow: hidden;
+}
+
+ul.indexNav li a {
+	padding: 4px 10px 4px 16px;
+	margin-right: 2px;
+	border: 1px solid #CCC;
+	display: block;
+	white-space: nowrap;
+	background-image: url(/common/images/bg-mark-links-down.gif);
+	background-position: 2px 6px;
+	background-repeat: no-repeat;
+	background-color: #EFEFEF;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+
+* html ul.indexNav { height: 1em !important; }
+
+/* -------------------- リニアナビ */
+ul.linearNav li { float: left; }
+
+ul.linearNav li.next,
+ul.linearNav li.prev {
+	padding: 1px;
+	margin: 0;
+	border: solid 1px #CCCCCC;
+}
+
+ul.linearNav li.next,
+ul.linearNav li.prev,
+ul.linearNav li ol li {
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	margin-right: 2px;
+}
+
+ul.linearNav li.next a,
+ul.linearNav li.prev a,
+ul.linearNav li ol li a,
+ul.linearNav li ol li strong {
+	display: block;
+	background-repeat: no-repeat;
+}
+
+ul.linearNav li.prev { text-align: left; }
+
+ul.linearNav li.prev a {
+	padding: 4px 10px 4px 16px;
+	background-image: url(/common/images/bg-btn-prev.gif);
+	background-position: left 10px;
+}
+
+ul.linearNav li.prev a:hover { background-image: url(/common/images/bg-btn-prev-over.gif); }
+
+ul.linearNav li.next { text-align: right; }
+
+ul.linearNav li.next a {
+	padding: 4px 16px 4px 10px;
+	background-image: url(/common/images/bg-btn-next.gif);
+	background-position: right 10px;
+}
+
+ul.linearNav li.next a:hover { background-image: url(/common/images/bg-btn-next-over.gif); }
+
+ul.linearNav li ol { margin: 0 9px 0 12px; }
+
+ul.linearNav li ol li {
+	width: auto;
+	padding: 1px;
+	border: solid 1px #CCCCCC;
+	text-align: center;
+}
+
+ul.linearNav li ol li a,
+ul.linearNav li ol li strong {
+	padding: 4px 8px;
+	background-image: url(/common/images/bg-btn-page.gif);
+	background-position: 0 100%;
+	background-repeat: repeat-x;
+}
+
+ul.linearNav li ol li a:hover {
+	color: #344F8F;
+	background-image: url(/common/images/bg-btn-page-over.gif);
+}
+
+/* -------------------- インフォナビ */
+dl.info dt {
+	float: left;
+	width: 5em;
+	margin-bottom: 3px;
+}
+
+dl.info dt.date { margin-right: 1em; }
+
+dl.info dt.category {
+	width: 6em;
+	color: #FFF;
+	text-align: center;
+	background-color: #334F90;
+}
+
+dl.info dd {
+	padding-left: 10px;
+	margin-bottom: 3px;
+	margin-left: 13em;
+}
+
+* html dl.info dd { text-indent: -3px; }
+
+dl.info dt.links,
+dl.info dd.links {
+	padding-left: 16px;
+	background-image: url(/common/images/bg-mark-links.gif);
+	background-position: 2px 1px;
+	background-repeat: no-repeat;
+}
+
+dl.info dd.summary {
+	margin-top: -3px;
+	margin-left: 14.4em;
+	font-size: 100%;
+}
+
+/* -------------------- 詳細へ・一つ前のページに戻る・トップへ戻る */
+p.learnMore,
+p.back,
+p.totop {
+	margin-right: 0;
+	text-align: right;
+}
+
+p.learnMore a,
+p.back a,
+p.totop a {
+	padding-bottom: 2px;
+	padding-left: 16px;
+	background-position: 0 0;
+	background-repeat: no-repeat;
+}
+
+p.learnMore a { background-image: url(/common/images/bg-mark-links.gif); }
+
+p.back a { background-image: url(/common/images/mark-links-back.gif); }
+
+p.totop a { background-image: url(/common/images/mark-totop.gif); }
+
+/* ------------------------------------------------------------ 06.Etc element */
+/* -------------------- 区切り線 */
+div#mainContents hr {
+	height: 1px;
+	border: none;
+	border-top: 1px dotted #000;
+	display: block;
+	background-position: bottom center;
+	background-repeat: repeat-x;
+}
+
+a img.external {
+	margin: 0 2px 1px 2px;
+	vertical-align: middle;
+}
+
+div#mainContents input,
+div#mainContents select,
+div#mainContents textarea { margin: 2px; }
+
+div#mainContents strong.word0 { background-color: #FF0; }
+
+/* ------------------------------------------------------------ 10.clearfix */
+div#mainContents div.articleInfo:after,
+ul.linksRow:after,
+div#mainContents ul.indexNav:after,
+div#mainContents ul.linearNav:after,
+div#mainContents ul.contentsNav:after {
+	clear: both;
+	height: 0;
+	visibility: hidden;
+	display: block;
+	content: ".";
+}
+
+div#mainContents div.articleInfo,
+ul.linksRow,
+div#mainContents ul.indexNav,
+div#mainContents ul.linearNav,
+div#mainContents ul.contentsNav { display: inline-table; }
+
+* html div#mainContents div.articleInfo,
+* html ul.linksRow,
+* html div#mainContents ul.indexNav,
+* html div#mainContents ul.linearNav,
+* html div#mainContents ul.contentsNav { height: 1%; }
+
+div#mainContents div.articleInfo,
+ul.linksRow,
+div#mainContents ul.indexNav,
+div#mainContents ul.linearNav,
+div#mainContents ul.contentsNav {
+	display: block;
+	zoom: 1;
+}
+
+/* EOF */

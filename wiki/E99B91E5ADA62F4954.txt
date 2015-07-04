@@ -1,0 +1,11 @@
+[[雑学]]
+
+*NVIDIA
+エヌヴィディアと読む
+アメリカの大手半導体メーカーGPUを制作販売してる。GeForce等
+~
+
+*sourceforge.net
+多くのOSS(OpenSourceSoftware)をホスティングしてるサイト
+tar.gz形式で直接wgetで落とせるようになっている。
+~

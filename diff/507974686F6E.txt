@@ -1,0 +1,759 @@
+ #ls
+ #contents
+ 
+ *インストール
+ Mac OS X付属のPythonとbrewで入れた新しいPythonがある場合、pathsの優先順位で実行するファイルが決まる。
++[[MacOSで複数バージョンPythonを利用する:http://qiita.com/_rdtr/items/3927e042b2ca18f03b8c]]
+ #sh(bash){{
+ sudo vim /etc/paths
+ }}
+ を実行して、/usr/local/binが/usr/binより上になるように書き換えれば良い
+ #sh(bash){{
+ /usr/local/bin ←/usr/binより上に記述
+ /usr/bin
+ /bin
+ /usr/sbin
+ /sbin
+ }}
+ ~
+-
+ *PYTHONPATH
+ Pythonがimportする時に、モジュールを探しにいくところ。
+ インタープリタの挙動としては、カレントで探す>PYTHONPATHで探す>PATHで探す。
+ システムが探しに行くパスはsysモジュールから確認できる。
+ #sh(bash){{
+ import sys
+ sys.path
+ }}
+ 
+ *Pythonの背景：
+ **Python概要
+ PythonはLinux、OSX、Windowsなど、どのプラットフォームでも動作する。
+ 標準ライブラリに既に、正規表現、数学関数、通信プロトコル、GUIフレームワークが実装されてる。
+ コードを極端にシンプルする思想が盛り込まれてる。同じ処理をするプログラムを違う人が買いても、結果は大体1通り
+ メタ変数は、foo、bar、basではなく、spam、ham、eggsが多く使われる。
+ ブロック構造をインデントで表す。他の言語みたいにカッコやendで明示する必要なし。
+ PEP：Pythonに関する新しいアイディア(拡張機能)を思いついたら、PEPというドキュメントにまとめて、提出可能。採用されれば国際基準になる。
+ import thisと記述すると、The Zen of PythonというPythonの設計思想が読める
+ 
+ 
+ **Pythonコミュニティ
+ PyConに参加すると、新しい技術をハンズオン形式で学べる。各国で毎年開催されてる。
+ 他にPythonハッカソンコミュニティ、Pythonプロダクトコミュニティも多い。
+ 
+ **Pythonのバージョン
+ 2系はで2.7.9で終わり。2.8はこれからも実装される事はない。
+ 2系と3系の後方互換性はない。3では文字列がunicodeに統一されてる。print文は文ではなく関数。
+ 2系のプロジェクトなら2系でそのまま引き継ぐべき。3系に以降はやめたほうがいい。
+ 2系に依存するサードパーティ製のライブラリがある場合は2を引き続き使うべき。
+ 
+ **PyDataという分野：
+ PythonとData処理を組み合わせた学術分野の事。このDataとは、数値データ、画像データ、自然言語データなど、あらゆるデータを指す。
+ データ処理に優れているPythonを利用して、これらのデータ処理を行う事をPyData専門という。
+ 
+ **Pythonインタープリタ
+ 通常はC言語で実装されている。
+ C言語でLexical Analyzerを作って、Syntax Analyzerを作って、コンパイルしたものが、Pythonインタープリタ
+ これを実行すると、.pyテキストファイルに対して、Pythonルールに従って評価して、結果を返す。
+ 
+ 
+ *Python入門
+ **python対話モード
+ #sh(bash){{
+ user/% python
+ }}
+ を入力するとpython対話モードがはじまる。
+ :で終わる文を入力すると次の行は...から始まる。
+ 次の行からはTabもしくはスペースのインデントを入れてからコーディングすれば、ブロック構造を認識してくれる。
+ 最後の入力で終わらない場合はプロンプトは...のままになる。
+ ブロック終了する場合は空の改行を一個入れる。
+ 
+ **保存&実行の流れ
+ エディタでテキストファイル開いてプログラムを書く、.py拡張子として保存して。
+ #sh(bash){{
+ user/%  python program.py
+ }}
+ と打って実行
+ 
+ **基本文法
+ pythonは基本的に1つの処理を1行で記述する。
+ 1行に複数の処理を記述する場合はセミコロンで区切る。
+ 
+ **コメント文　
+ #からはじまる。	そこから行末までコメント扱いになる。
+ 
+ **日本語入力
+ pythonはデフォルトで、実行時はソースファイルを全てASCIIで読み取る。日本語文字を入力すると、エスケープ文字コードとして見られてエラーになる。
+ 1行目、または2行目に、次のどちらかの書き方で書いておくと、文字コード問題が解決する。3行目以降だとコメントになる
+ #文字コードの種類： スペースはあってもなくてもいい。
+ #sh(python){{
+ #coding: エンコード名
+ #coding=エンコード名
+ 
+ #coding: Shift_JIS
+ #coding: cp932
+ #coding: EUC-JP
+ #coding: UTF-8
+ }}
+ 
+ 
+ ・出力文字コード
+ 　プログラムで文字コードを指定すると、そのコードに従ってコンパイルされ、
+ 　標準出力に表示される文字コードも自動的に同じ形式になる
+ 　(UTF-8でプログラムをコンパイルして、標準出力に投げる実行結果の文字列もUTF-8になる)
+ 
+ ・標準出力の文字コード
+   これで標準出力の文字コードを教えてくれる
+  import sys
+  print sys.stdout.encoding
+ 
+ ・文字列リテラル
+ 　"文字列"か'文字列'
+   文字列は一度作ると変更不可。string[2] = 'N';みたいなことはできない。
+ 
+ ・print文
+ 　自動的に/nを追加して、改行される	
+ 　複数の文字列を,カンマで区切って引数として渡せる。
+ 　自動でスペースを入れて順番に出力
+ 　print "Hello", "world"
+ 　print "%s" % "lee" のように、文字列の中でフォーマット指定したあと、%記号をおいて、その後に展開したい文字列や値を書くとprintfと同じ風に展開できる。
+ 
+ ・エスケープシーケンス
+ 　\a \n \" \ 　とか、C言語と一緒
+   \は、プログラムの中で、文字列書いてる途中で改行して、次の行で続けて書き始める場合に使う	
+ 
+ ・トリプルクォーテーション
+ 　囲まれた部分をプログラムで忠実に標準出力に出す。
+ 
+ ・raw文字列
+ 　文字列の先頭にrまたはRを付けると、その文字列内のエスケープシーケンスなどが全部無効。ありのままの文字列になる。
+ 　正規表現の中で使うのが一般的。なぜなら正規表現では当たり前のようにバックスラッシュを使うので、
+ 　本来"\\"でエスケープする必要が、　r"\"の書き方をすれば必要なくなる。
+ 
+ ・UNICODE
+ 　pythonプログラム内で文字列になんらかのルールを与えて文字列解析する場合に、日本語文字列だと、8bit単位で扱いにくい
+ 　そこで、あらかじめUnicode文字列を作っておけば、日本語でも、半角英数でも、1文字単位であとから操作可能。
+ 　UTF-8のファイルなら、先頭にuを追加しておくだけでUnicode文字列になる。
+   u"文字列"
+   len()使った時に正確な文字数が出る。
+   index指定で正確な文字を取り出せる。
+ 
+ ・len()関数
+ 　len(文字列)でその文字列(配列)の長さを返す。Unicode文字列なら文字数になる。
+ 　utf-8の場合は、日本語文字は1文字3バイト
+ 
+ ・in演算子
+ 　要素がシーケンス内に含まれてるかどうかを検索する演算子
+ 　1 in [1, 2, 3]  #True
+   'b' in ['2', 'a', 'b'] #True
+   "李天" in ["李天", 1, 2] #True
+   "acd" in "abcdefg" #True
+   u"李" in u"abcdefg李hijklmn" #True　どちらもユニコードで比較しないといけない
+ 
+ ・split()メソッド
+   str型文字列に対して、デリミタを指定してlistを作れる。
+ 　"this-is-a-pen".split("-");      #["this", "is", "a", "pen"]
+ 
+ ・join()メソッド
+   splitの逆で、デリミタに対して、それを挿入すべきリストを指定してあげれば、デリミタ付き文字列を作れる。
+   "-".join(["this", "is", "a", "pen"]);  #this-is-a-penを作れる。
+ 
+   純粋にデリミタを削除する場合は"".joinを使う
+   list = ["1", "2", "3", "4"]
+   "".join(list)  #"1234"を作れる
+ 
+   #元々数値型の場合は、一度全要素を文字列型に変換すれば同じように操作できる
+   list = [1, 2, 3, 4]
+   "".join(map(str, list))  #"1234"になる。
+ 
+ ・エンコード処理
+ 　Unicodeは文字単位で文字列を処理する。バイト関係ない。
+ 　utf-8やShift_JISは基本的にバイト単位で文字を処理する。文字数は関係ない。
+ 　Unicode文字列に対して.encodeやdecode処理をすれば、unicodeからutf-8(Shift_JIS)に変換したり、
+   またutf-8からunicodeに戻したりできる。
+   utf8code = u"李天埼".encode("utf-8"); #unicodeに変換
+   unicode = utf8code.decode("utf-8");  #元に戻す
+ 
+ ・リスト内包処理
+ 　list = ["a", "ab", "abc"];
+   listLen = [len(word) for word in list]; #for文を回してlistの各変数を取り出してその長さを使って新しいlistを作る。
+ 
+ ・リストを変数に対入
+ 　last, first = ["lee", "tenki"]; #要素数と同じ数の変数にそれぞれ代入する処理。
+ 
+ ・range()関数
+ 　range(3)　で[0, 1, 2]のリストを作って返してくれる。0〜指定した数値未満のリストを作る。
+ 　range(10, 13)　で[10, 11, 12]のリストを作ってくれる。最小〜最大未満のリストになる。
+ 　range(0, 101, 10) #[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]のリストになる。第三引数はstep。
+ 　range(10, -10, -1)  #逆順の配列を作りたい場合は第三引数を使って-1を代入する。
+ 
+ ・type()関数
+ 　オブジェクトの型を返してくれる
+   type("lee");   #str型
+   type(u"lee");  #unicode型
+   type(2);　　　　#int型
+   type(2.0);     #double型
+ 
+ ・str()関数
+ 　str(数値)とかすると、文字列型に型変換してくれる。
+ 
+ ・count()メソッド
+ 　要素が含まれる数が返ってくる。
+ 　"abcdefga".count('a');  #2個含まれてるので、2が返ってくる。これで先に調べて、含まれてる場合にindexで探索するとエラーが出ない。
+ 
+ ・find()メソッド #string型のみ
+ 　文字列型のみ使用可能なメソッド
+   string = "abc";
+   string.fing("bc") #indexの1が返ってくる。見つからなかった場合は-1が返ってくる。
+ 
+ ・index()メソッド
+ 　指定した要素が含まれる最初のindexを返してくれる。もし見つからない場合はエラーになる
+ 　"abcdefgab".index('b');  #indexの1が返ってくる。
+ 　"abcdefgab".index('b', 2); #index=2の場所、すなわちcから探索を始めて、最初に見つかった8を返す。
+ 
+ ・int()関数
+ 　文字列でも整数値に変換してくれる。小数点がついてると不可
+ 
+ ・chr()関数
+ 　文字コードを文字にデコードする
+ 　chr(65)  #でAを出力
+ 
+ ・ord()関数
+ 　文字を与えるとascii文字コードを教えてくれる
+   ord('A')  #65になる。
+ 
+ ・float()関数
+   文字列を浮動小数点数に変換してくれる関数。小数点以下なくても .0 をつけてくれる。
+ 
+ ・文字列連結
+   +演算子でつなげるだけ。文字列と数値リテラルは+演算子で繋がらない。　数値を繋げたい場合はstr(数値)で型変換する。
+   *演算子で指定した数値分だけ繰り返せる
+ 
+ ・インデックス
+ 　変数名[index]で指定可能。　Unicodeなら文字を取り出せる。
+ 　マイナスも指定可能　-1で最後の文字、-2で最後から2番目
+ 
+ ・部分文字列slice
+   str = abcd;
+   substr = str[0:5];
+   で0〜4のインデックスを切り出せる
+   [ここから:ここ未満]が範囲。最後のインデックス＋1(文字列の長さ)まで指定可能
+   [:ここまで]
+   [ここから:]
+   [:]
+   のように省略も可能
+ 
+ ・変数
+ 　pythonでは変数名は単なる参照(ポインタ) 
+ 　pythonにデータの型の概念はない。
+   変数名 = 値　で代入可能
+   浮動小数点数はCのdoubleと同じ精度  
+ 
+ 　同一変数名 =　値を代入しなおすとポインタが上書きされるだけ。
+ 　num = 10;
+   num2 = num;  #num2は10のオブジェクトを指す
+   num = 20;    #numだけが、新しく作られた20というオブジェクトを指す
+ 
+ 　値(オブジェクト)自身にデータ型が記憶されてるので、ポインタの参照先を違う型で上書きしても大丈夫
+ 　num = 10;
+   num = "abc";
+ 
+   ポインター同士の代入も可能。
+   num = 10;
+   num2 = num;
+ 
+   配列はCと同じで、先頭のポインタだけ渡される
+ 
+ ・整数型int
+ 　int / int　は小数点以下切り捨てされて、intになる。
+ 
+ ・オブジェクトの型
+ 	組み込み型
+ 	  + 数値型
+ 	  |  + 整数
+ 	  |  + 長整数
+ 	  |  + 浮動小数点
+ 	  |  + 複素数
+ 	  + シーケンス型
+ 	  |  + 文字列
+ 	  |  + ユニコード文字列
+ 	  |  + リスト
+ 	  |  + タプル
+ 	  + マップ型
+ 	  |  + 辞書(ディクショナリ)
+ 	  + ファイルオブジェクト
+ 
+ ・代入
+ 　+= -= など拡張代入演算子も使える。
+ 
+ ・配列
+ 　array = [1, 2, 3];
+   array.append(4);
+   array.append("abc");
+   print(array);  # [1, 2, 3, 4, 'abc']が出力される。
+ 
+ ・演算子
+ 　**演算子　累乗する演算子
+ 　2 ** 8　で256返してくれる。
+ 
+ ・真偽
+   0は偽、それ以外は真
+   ""は偽、それ以外は真
+   TrueはBooleanTypeの真、FalseはBooleanTypeの偽
+   ()、[]、{}の空要素は偽
+ 
+ ・if条件文
+ 　pythonでは{}ブロックの概念がない。if文の条件には()をつけてもいいが、その後:コロンを書いて、インデントでブロックを判別する。
+   インデントはスペースでもタブでもかまわない。空白文字ならなんでも良い。
+   if 条件: 
+   		処理
+   		処理
+   elif 条件:
+   		処理
+   else:
+         処理
+ 
+ ・while条件
+ 　if文と同じ考え方
+   while 条件:
+   		処理
+   		処理
+   		処理
+ 
+ ・条件演算子
+   数値 == 数値　は数値の比較
+ 　"文字列" == "文字列" 完全一致すればTrue
+   [1, 2, 3] == [1, 2, 3]  配列の全要素が完全一致すればTrue
+   "文字列" > "文字列" はアルファベットソートに基づく比較。A < B < a < b 
+ 
+ ・型比較 is
+ 　変数1 is 変数2
+ 　参照先のオブジェクトが同一オブジェクトかどうかを返す。
+   [1, 2, 3] is [1, 2, 3]  #False
+   "abc" is "abc" #これは本来ならFalseだが、Pythonの仕様で単値のリテラルは同じ値なら同じメモリを使い回す仕様なので、Trueになる。
+   is not でも型比較の逆
+ 
+ ・条件演算子
+   &&と||は使えない。andとorを使う
+ 　!も使えない。notを使う
+ 
+ ・while文
+ 　whileだけでなく、whileの条件がFalseになったあと、whileを抜ける直前に実行する処理をelseブロックに書いておける。
+   ほとんどの場合はelse書かなくても同じだけど、ただ、breakで抜け出した場合はelseは実行されないってところが違う。あと明示によりプログラムが読みやすくなる
+   while 条件:
+        処理
+        処理
+   else:
+        処理
+ 
+ ・for文
+ 　オブジェクト(配列、文字列)を順番に変数に代入してループする。終わったあとにelseブロックの処理を実行
+ 
+ 　for 変数 in オブジェクト:
+  	    処理
+  	    処理
+ 　else:
+         処理
+ 
+ 　array = ["Lee", "Ten", "Ki"];
+ 　for temp in array:
+ 　　	　print(temp);
+ 
+ 　string = u"李天埼";
+ 　for char in string:
+ 	　print(char);
+ 
+   for i, j in ((1, 2), (3, 4)):
+     2つの同数のシーケンスを用意してあげれば、同時にiとjに代入してくれる。
+     3つ以上でもOK
+ 
+ ・関数
+   pythonの関数も、ブロックをカッコでくくる必要はない。defを使えば関数定義できる。
+ 
+ 　def 関数名(引数, 引数):
+       処理;
+       処理;
+ 
+ ・キーワード引数
+ 　引数が多い(10個くらい)必要な関数を定義した時、10個目の引数にだけ代入したかったら不便。1〜9まで全部埋めないといけない。
+ 　そこで、10個目の引数にのみ代入を指定したのが、キーワード引数
+ 　def func(a, b, c, d, e, f, g, h, i, j, k, l, m, n):
+     print m;
+ 
+   func(m=10);
+   これで、引数のうち、mにのみ代入される。
+ 
+ ・デフォルト引数
+ 　デフォルト引数を定義しておけば、後々明示的に引数を渡さなくてもOK
+ 　def func(hoge=["lee"]):
+     print hoge;
+ 
+   func();
+ 
+ ・sorted()
+ 　リストなどのシーケンス自体の並び順を変更せずに、新しくソートされたリストを作る時に必要
+   sorted(list)
+ 
+ ・reversed()
+ 　同じくシーケンス自体の並びを変更せずに、逆順の新しいリストを返す
+   reversed(list)
+ 
+ ・リスト
+ 　シーケンス型の一種。文字列と同じ部類。要素としてあらゆる型のオブジェクトを持てる。
+ 　indexはマイナス可能
+   list = [オブジェクト1, オブジェクト2, オブジェクト3...]
+   スライスでリストの要素を抽出も可。スライスで得られるのは、配列の途中のポインタ。スライスした部分を書き換えも可。
+   sublist = list[0: 3];
+   list[0: 3] = ["new", "element"];
+   文字列と違って、list[0] = 新しいオブジェクト;みたいに後から要素変更可能。
+   len(list)　でリストの要素数を返す。下の次元は見ない。
+   appendでオブジェクト追加。
+   list.append("object");
+   list.append([1, 2, 3]);
+   extendで新しいリストを既存リストの後ろに展開(そのままリストごと追加する訳ではない)
+   list.extend([1, 2, 3]);
+   +演算子でもextendと同じ効果
+   *演算子で配列を繰り返したものを後ろに追加。
+   insertで指定した位置に新しいオブジェクトを追加。  insert(index, "object");
+   delで指定した位置のオブジェクトを削除  del list[index];  もしくは del list[index];
+   popで指定したindexのオブジェクトを削除して 値を取り出す  list.pop(0);
+   removeで指定したオブジェクトと同じものをlistの中から検索し、最初にヒットしてものをlist内から削除する。　list.remove(list[1]);
+   list.sort()で昇順にソートする。降順のソートは存在しない。
+   list.reverse()で現在の並び準を逆にする。ソートではない。 sortしたあとにreverseするとあたかも降順にソートしたようになる。
+   コンストラクタと同じようにlist()という書き方でリストを作れる。
+   newList = list("abc");
+   newList = list(["a", "b", "c"]); #引数も同じくリストの場合、listのコピーが作られる。
+   newList = list(("a", "b", "c")); 
+   コンストラクタの引数にシーケンス型を指定しておけば、どんな場合でもlist型を作れる。
+   zip()関数を使えば、　『複数の要素』を持つlistをn個まとめて、『複数のタプル』を持つlist1個に圧縮できる。各タプルはn個の要素を持つ。
+   subjects = ["math", "english", "science", "none"];
+   scores = [90, 80, 70];
+   result = zip(subjects, scores);  #[("math", 90), ("english", 80), ("science", 70)]のリストになる。要素数は少ないほうに合わせる。
+ 
+ ・タプル
+ 　constantなリスト、appendなどで操作不可能。どうしても操作したい場合は、+で連結して新しいタプルを作る。
+ 　タプルは要素数が1つの時でも必ず,を忘れない。 
+ 　var = ("a");   #"a"というただの文字列になる。
+ 　var = ("a",);　#("a")というタプルになる。
+ 　タプルは単純に作るだけならカッコ不要だが、紛らわしいのでカッコつけるべき
+ 　var = 1, 2, 3  #var = (1, 2, 3)と同じ
+ 　タプルはconstantなので、代入したり上書きしようとするとエラーになる
+ 　var[0] = 3; #TypeErrorになる。
+ 　シーケンスオブジェクトからコンストラクタみたいにタプルを生成できる
+ 　tuple([1, 2, 3]);
+ 　tuple("leetenki");
+ 　tuple((1, 2, 3));  #タプルをコピーして新しいタプルを作る。
+ 
+ 
+ ・辞書型
+ 　ハッシュマップや連想配列に似た機能
+ 　インデックスでは要素抽出できない。keyを用いて、valueを抽出する考え方。存在しないkeyで取り出そうとすると、KeyErrorが発生する。
+ 
+ 　mapにはあらゆるオブジェクトを指定可能だが、keyには変更不可能な値のみ代入可能。(int, float, str, tuple)
+ 　dic = {"Math": 100, "English": 80};
+ 　print(dic["Math"]);   #100が取り出される。
+ 　dic["Math"] = 99;     #既存のkeyを指定して代入すると、valueが書きかわる。
+ 　dic["Science"] = 70;  #存在しないkeyで代入しようとすると新たに要素が追加される。
+ 
+ 　削除する時は、del演算子でもOK、pop()メソッドでもOK
+ 　del(dic["Math"]);  #key = "Math"の要素を削除。削除できない場合はエラー
+ 　dic.pop("Math");   #key = "Math"を検索して、その要素のvalueを返して、要素ごと削除。
+ 　dic.popitem();     #辞書中に格納されてる要素(スタックの1番上の要素だけど、実際ランダム)を(key, value)の形式のタプルとして返す。そしてその要素を削除
+ 　dic.clear();　　　　#辞書中の要素を全て削除
+ 
+ 　検索する時はin演算子　もしくは、has_key()メソッドを使う。どちらも同じ動作する。
+   dic.has_key("Math");
+   "Math" in dic;      
+ 
+   dic.get("key")でそのキーに対応したvalueを読み出して来れる。"key"が存在しない場合はNoneを返してくれる。
+ 
+ 
+   辞書のkeys()メソッドを使えば、キーのみをリストとしてまとめて返してくれる。
+   同じくvalues()メソッドでvalueのみをリストとしてまとめて返してくれる。
+   dic.keys();
+   dic.values();
+ 
+   辞書のitems()メソッドを使えば、key:valueを(key, value)のタプルに変換して、タプルのリストにパースしてくれる。
+   dic.items();  
+ 
+   ・集合型(set)
+     辞書のvalueをなくしてkeyだけにしたもの。
+     一意な値しか入らないリストというイメージ。一意のデータの管理に向いてる
+     dataSet = {"lee", "ten", "ki"};
+     dataSet.add("new");
+     len(dataSet);
+ 
+     2つデータセットに対して、集合演算 &　と　|　も行える
+     permission1 = {"r", "w"};
+     permission2 = {"w", "x"};
+     user1 = permission1 & permission2;      # wのみ可能
+     user2 = permission1 | permission2;      # rwx全て可能
+ 
+ ・ファイル読み書き
+ 　Pythonからファイルを読み書きするのはシンプル
+   fileHandler = open("ファイル名", "r"); #第二引数のモード名は省略可能
+   fileHandler.read();                   #EOFまで全て読み込んでくれる
+   fileHandler.seek(0);                  #file cursorのポジションを0バイト目にシークさせる
+   fileHandler.read(10);                 #現在のファイルハンドラーから10バイト分だけ読み込む
+   fileHandler.readline();               #現在のcursorから\nが現れるまで読み込む
+   fileHandler.close();                  #fileHandlerを閉じる
+ 
+   書き込み処理は"w"、追記は"a"モード
+   fileHandler = open("ファイル名", "w");
+   fileHandler.write("leetenki")
+ 
+ ・withによるファイル読み書き
+   withブロック内でfileHandlerを使っていれば、withブロックを抜ける際に自動でファイルをcloseしてくれて
+   全ての例外処理もやってくれる。
+ 　with open("ファイル名", "r") as fileHandler:
+       fileHandler.read();
+ 
+ ・update()メソッドによる辞書のアップデート
+ 　別の辞書の要素を全て現在の辞書に加える。key重複した場合はvalueを上書きする。
+   dic = {"math": 100, "en": 70};
+   dic2 = {"math": 70, "science": 80};
+   dic.update(dic2);   #{"math": 70, "en": 70, "science": 80};　の新しい辞書になる。
+ 
+ ・標準入力から一行読み込み
+   import sys;
+   line = sys.stdin.readline();
+ 
+ ・標準入力からの入力を一行ずつlineに代入する
+ 　import sys;
+   for line in sys.stdin:
+       print line;
+ 
+ ・標準入力されたデータを配列化する処理
+ 　ns = [line.split(",") for line in sys.stdin]
+ 
+ ・更に標準入力されたデータを配列化して、各配列の各要素をint化する事もできる
+   ns = [[int(num) for num in line.split(",")] for line in sys.stdin]
+ 
+ ・map関数
+ 　map(int, array);
+ 　map(myFunc, array);
+ 　配列arrayの各要素に対して、第一引数で指定した関数を適用させる。自分で定義した関数も可能。
+ 
+ ・stdinからファイルをパイプでプログラムに流す。パイプは棒線1本
+ 　cat ファイル名 | python プログラム.py
+   手動で入力する時にEOFを出すにはctrl-D押せば良い
+ 
+ ・数学関数
+ 　import mathすれば数学関数が使える
+ 
+ ・pythonでクラス定義
+ class クラス名(object):
+   classVal = 10  #クラス変数
+ 
+   @classmethod
+   def staticMethod(self):
+     self.classVal = 10;
+ 
+ ・import処理
+ 　自分でファイルを作って、"test.py"の拡張子で保存する
+ 　これをimportする時は.pyは省略して
+ 　import test
+ 　と書く。
+ 　test.py内で定義されているmyFunc()を使いたい時は
+ 　test.myFunc()
+ 　と書いて呼び出す。
+   import文により、testで書いたソースがモジュールとしてロードされる。
+ 
+   from モジュール名 import メソッド名
+   これを指定すると、モジュール名のうちのメソッド名のみを、単一モジュールとして読み込んで来れる。
+   メソッド名()で実行可能になる。
+ 
+   import モジュール名 as 別名
+   でモジュール名に別名をつける
+ 
+   from モジュール名 import メソッド名 as 別名
+   読み込んだメソッドに別名を付ける
+ 
+ ・reモジュール
+ 　import re
+ 　によって、Pythonの正規表現オブジェクト(Regex = regular expression) 読み：レジェックスオブジェクトを使用できる。
+ 　標準パッケージにパスが通っている前提で使える。
+ 
+   result = re.search("正規表現", "検索対象文字列");
+   で対象文字列内にある正規表現で指定されて文字列を全て抽出する。
+   result.group(); でマッチした文字列を返してくれる。もしマッチした結果がない場合はNoneが返ってくる
+ 
+ 
+ ・標準ライブラリ：
+ [sys]
+ 　sys　Pythoインタープリタの動作に関するfunction
+ 　sys.executable  現在起動中のPythonインタープリタの名前、場所が格納される。
+ 　sys.argv  コマンドライン引数が格納されてる　
+ 
+ [os]
+ 　os   OS依存の機能を操作する。システムコール
+ 　import os
+ 　os.mkdir("spam")
+ 　os.chdir("spam")
+ 　os.getcwd()
+ 
+ [shutil]
+ 　高いレベルでファイルやディレクトリを操作できる。
+   import shutil
+   shutil.copytree(".", "test")  #current directory以下全てのファイルをまとめて、testという新しいディレクトリを作ってコピーする
+   shutil.rmtree("test")         #testディレクトリを削除する
+ 
+ [json]
+   dic = {
+     "key": "value",
+     "key2": "value2"
+   };
+ 　js = json.dumps(dic);    #json encode
+ 　newDic json.loads(js);   #json decode
+ 
+ [time]
+ [datetime]
+ 　日付の時刻の機能を提供する。
+ 　time  基本的な現在時刻の処理
+ 　datetime  日付を高度に操作したり、カレンダーの加算、減算ができる
+ 　import time
+ 　now = time.localtime()
+ 　time.strftime("%Y %m %d %H:%M:%S", now)
+ 
+ [random]
+ 　他の言語よりも高度な実用的なrandom funciton を実装してる
+ 　import random
+ 　random.randint(1, 1000)　　1〜1000の整数をランダムに1つ返す
+ 
+ 　kuji = [True, False, Flase, False, False]
+ 　random.choice(kuji)     シーケンスの中からランダムに一つ抽出する
+ 　random.shuffle(kuji)    kujiのシーケンスをランダムに並び替える。kujiそのものの並びを書き換える。
+ 
+ [math]
+ 　import math
+ 　math.pi　　　円周率
+ 　math.sqrt(2)　ルートを取る
+ 　math.pow(2, 8) 2の八乗
+ 　math.sin(math.pi / 2)  三角関数。ラジアンを使う。 1になる。
+ 
+ [itertools]
+ 　イテレーターは効率的なループを実行するためのモジュール
+ 
+ 　for x in itertools.chain("abcd", "efg"):
+     print x;　　#["a", "b", "c", "d", "e", "f", "g"]が順番にxに代入される。
+ 
+ 　for y in itertools.combinations("abc", 2):
+     print y;   #("a", "b")   ("a", "c")   ("b", "c")
+   数学のコンビネーションを自動で生成してくれる。
+ 
+ ・サードパーティ制パッケージ：
+ 　世界中の人がPythonのモジュールを作っていて、それぞれ作ったもののindexを公開できる
+ 　その公開サイトがPyPI(パイピーアイ)。あらゆるパッケージのindexが公開されてるため、pipなどのコマンドは基本ここから探してくる
+ 
+ ・setuptool
+ 　pipとは逆に、自分でパッケージを作ったりして配布する時に使う。
+ 　ユニットテストなどのデバッグ機能も標準でついてる。
+ 
+ ・pipコマンド：(Python Install Package)
+ 　pythonのバージョン管理ツール (https://pip.pypa.io/en/latest/index.html#)
+   サードパーティ製のパッケージインストールに使う
+   pip freeze すでにインストールされているパッケージをリストアップ
+   pip -V バージョン
+   pip install パッケージ名　でそのパッケージをインストール
+   pip install --upgrade パッケージ名で、既存パッケージを削除して最新パッケージを置き換える
+   pip uninstall パッケージ名　でそのパッケージを削除
+   pip show numpy　でnumpyなどのサードパーティ制パッケージのインストール情報(インストール先など)を表示できる
+   pip list で一覧表示
+   pip search キーワード　でそのキーワードを含んだパッケージを検索してくれる
+ 
+ ・virtualenvコマンド
+ 　独立したpython環境に切り替えたりできる。
+ 　現場において、1人の開発者が複数のプロジェクトに参加するのは当たり前で、プロジェクトごとに、要求されるパッケージのバージョンなどが
+ 　異なる場合もある。バージョンが異なると、実装方法もやや異なるので、1つの実行環境だけで現場に出て多くのプロジェクトに参加するのはよろしくない。
+ 　
+ 　各プロジェクトごとに環境を独立させたり、専用のパッケージをインストールしたりできる。
+ 　
+   virtualenv DST_DIR と指定する事で、DST_DIRという仮想環境用directoryをcurrent以下に作ってくれる。
+   source DST_DIR/bin/activate　と実行することで、仮想環境を起動できる
+                                ちなみにactiveというのはシェルスクリプトのファイルで、これをsourceコマンドで実行した事になる
+   activateした瞬間に、シェルの先頭のプロンプトが書き変わって、更にenvのPATHの先頭に、DST_DIR/binがexportされてるのがわかる。
+   すなわちこの状態でpythonをたたくと、DST_DIR/bin/python が優先的に実行される
+   また、この状態でなにをpipでインストールしてもグローバル環境ではなく、DST_DIR/lib/python2.7/site-packages/の下にインストールされ、
+ 
+ ・virtualenvwrapperコマンド
+ 　virtualenvと一緒に使う事で効率化する。
+ 　インストール後は、シェルのrun commandを書いておく。
+ 　.zshrcを開いて、次の2行を追加。起動時にWORKON_HOME変数をexportして、virtualenvwrapperを使える状態にする。
+ 　export WORKON_HOME=/Users/user/python_lerning/
+ 　source `which virtualenvwrapper.sh`
+ 　これで、
+ 　mkvirtualenv test1　と実行すれば、WORKON_HOME以下にtest1というディレクトリが作られて、
+ 　workon testと指定すれば仮想環境が動く。
+ 
+   仮想環境削除するときは
+   rmvirtualenv test1 とすればOK
+ 
+ ・Requests パッケージ
+ 　標準ライブラリだとurllib2を使ってHTTPクライアント機能を実装するが、
+ 　requestsを使うともっとわかりやすく書ける。
+ 
+ ・BeautifulSoup4　パッケージ (http://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+ 　web scraping library
+ 　requestなどで取得してきたHTMLドキュメントをシンプルにパースできる。
+ 　特定のdivやlinkなどを抽出できる。
+ 　r = requests.get("http://leetenki.azurewebsites.net/ai/index.html")
+ 　soup = BeautifulSoup(r.content);
+ 　print soup.find(id="reset");
+ 　print soup.find_all('a');
+ 
+ ・pillow 画像を処理するライブラリ
+ 　from PIL import Image
+ 　image = Image.open("sample.jpg");
+   width = image.size[0];
+   height = image.size[1];
+   halfImage = image.resize((width/2, height/2), Image.ANTIALIAS);
+   halfImage.save("sample.jpg");
+ 
+   rotateImage = image.transpose(Image.ROTATE_90);
+   rotateImage.save("sample2.jpg"):
+ 
+ ・wheel
+   pythonのパッケージを配布する時に、ひとまとめにする形式。昔はeggsというパックが使われてた。
+   今は環境に必要なwheelというパックを作って配布すればどこでも再現可能
+ 
+ ・ipython 
+ 　pythonの標準対話シェルのパワーアップ版(unixのshとzshみたいな関係)
+ 　- Tab補完機能付き　自分で定義した変数も補完してくれる。
+ 　- 変数調査のデバッグ機能　変数名の後ろにはてなを付けるだけで型、中身全て表示してくれる。ハテナ2個ならより詳細になる　num? num??
+ 　- マジックコマンド ipythonシェル付属の専用コマンド。全て先頭が%からはじまる。 %ls     %env     %save
+ 　  %saveコマンドで、指定した過去の入力をpyファイルに保存してくれる
+ 　  %save history 1-10        #これで1〜10の履歴をhistory.pyに保存してくれる。
+ 　  %quickref コマンドで全コマンドのリファレンスを表示
+ 　  %run コマンドでpythonファイルを実行。 -tで時間計測、-dでデバッグ
+ 　- システムコマンド OSごとに定義されているシステムコマンドは!を付けて実行可能　!git   !find   !pwd    !grep    !ls
+ 　  f = !ls　のように、システムコマンドの場合は、コマンド実行結果を変数に代入する事も可能。
+ 　　システムコマンドとマジックコマンドで同名なものが多い
+ 
+ ・ipython notebook
+ 　ブラウザ上でipythonを実行するGUI pythonツール。
+ 　ipython notebookというオプションを入れるだけで、http://localhost:8888/へブラウザが立ち上がって、開かれる。
+ 　ipython notebookを使う場合は、ipythonが依存する他のパッケージも必要になる。しかしpythonはデフォで全てのパッケージが入ってないので、
+ 　もし先にipythonを入れたなら、一度アンインストールして、残りの依存パッケージを全てインストールしなおす。
+ 　pip uninstall ipython
+ 　pip install "ipython[all]"
+ 
+   ipython notebook で起動
+   ipython notebook --port 8889 でポートを指定して起動
+   ipython notebook --no-browser でブラウザの自動立ち上げをしない。
+   ipython notebook --matplotlib=inline　でmatplotの描画機能をブラウザ上で有効にする。
+ 　notebookが起動すると、ブラウザ上にカレント以下のファイルツリーが表示されてる。
+ 　ここからGUIで各ファイルをいじれるけど、ipythonシェルをGUIで使う場合は、
+ 　new → Python2
+ 　を選択して、pythonのGUIシミュレータを開く。
+ 　各コードセルにコードを入力して、[Shift] + [Enter]でリアルタイムインタープリット
+ 　終了する場合は、ファイル画面で、コードセル(ノートブック)をshutdownして削除する。ターミナル開いてる場合も、shutdownする。
+ 　ブラウザとじて、シェルでctrl + c で強制終了する。
+ 
+ ・numpy 多次元配列操作用パッケージ
+ ・scipy 科学計算
+ ・matplotlibデータ可視化
+ ・Pylean2ディープラーニング
+ 
+ 
+ 
+ 　

@@ -1,0 +1,198 @@
+@charset "utf-8";
+
+/* ------------------------------------------------------------
+   
+	filename:	default.css
+	created:	071020
+	update:		081230
+	copyright:	(c)2008 kazuwaya All rights reserved.
+		  
+------------------------------------------------------------ */
+
+/* ------------------------------------------------------------ Initialization of the browser style */
+html { overflow-y: scroll; }
+
+* html { overflow: hidden; }
+
+* html body {
+	height: 100%;
+	background: url(null) fixed;
+}
+
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+address,
+code,
+em,
+strong,
+img,
+q,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+	padding: 0;
+	margin: 0;
+	font-style: normal;
+	font-weight: normal;
+}
+
+/* ------------------------------------------------------------ body reset */
+body {
+	font-family: "ヒラギノ角ゴ Pro W3", Hiragino Kaku Gothic Pro, "ＭＳ Ｐゴシック", Osaka, Helvetica, Arial, sans-serif;
+	font-size: 10px;
+	background-color: #FFF;
+}
+
+* html body { font-size: xx-small; }
+
+*:first-child+html body { font-size: x-small; }
+
+table { font-size: 100%; }
+
+/* ------------------------------------------------------------ Table Elements */
+table,
+th,
+td {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* ------------------------------------------------------------ Form Elements */
+input,
+select,
+textarea {
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+textarea { font-family: inherit; }
+
+/* ------------------------------------------------------------ etc */
+a,
+fieldset,
+img { border: 0; }
+
+img { vertical-align: middle; }
+
+*:first-child+html img { vertical-align: bottom; }
+
+* html img { vertical-align: bottom; }
+
+img {
+	margin-bottom: 0;
+	font-size: 0;
+	line-height: 0;
+}
+
+/* input */
+input { vertical-align: middle; }
+
+/* ------------------------------------------------------------ typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li,
+dt,
+dd,
+th,
+td,
+pre,
+caption,
+address {
+	line-height: 1.5;
+	font-size: 120%;
+	color: #333;
+}
+
+ol li,
+ul li { list-style: none; }
+
+/* 入れ子対応 */
+p input,
+p select,
+p textarea,
+li p,
+li li,
+li dt,
+li dd,
+li input,
+li select,
+li textarea,
+dd p,
+dd li,
+dd dt,
+dd dd,
+dd th,
+dd td,
+dd input,
+dd select,
+dd textarea,
+th p,
+th li,
+th dt,
+th dd,
+th input,
+th select,
+th textarea,
+td p,
+td li,
+td dt,
+td dd,
+td input,
+td select,
+td textarea { font-size: 100%; }
+
+/* 強調スタイル */
+em {
+	font-style: italic;
+	background-color: #FCF;
+}
+
+strong { font-weight: bold; }
+strong.more { color: #CC0000; }
+strong.most { font-weight: bold; color: #CC0000; }
+
+/* リンクスタイル */
+a:link,
+a:visited {
+	color: #3B5BA4;
+	text-decoration: underline;
+}
+
+a:hover,
+a:active {
+	color: #F60;
+	text-decoration: underline;
+}
+/* EOF */

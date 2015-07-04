@@ -1,0 +1,12 @@
+-[[lee:http://leetenki.azurewebsites/]]:定義語|説明|new|
+-:定義語|説明|new|
+-+-asd*asd
+ 
+-[[aaa]]
+-
+-**12e
+-***4
+-*1
+-
+-#ls
+-

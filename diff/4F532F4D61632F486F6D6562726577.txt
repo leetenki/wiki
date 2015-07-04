@@ -1,0 +1,154 @@
+ *Homebrewとは
+ Mac OS X用のパッケージ管理ツール。MacPortsより人気
+ ちなみにパッケージとは、実行ファイル、設定ファイル、ライブラリを一つにまとめたものの事。
+ (スーパーユーザー)sudoしなくても一般ユーザでインストール可能
+ 依存関係でインストールされるパッケージが少ない。
+ インストール先は基本的に実体を/usr/local/Cellar/に入れて、/usr/local/bin/内にリンクを作る。
+ Mac OS Xはデフォで/usr/loca/bin/にパスが通っていないので、.shrcにPATHを通しておく。
+ brew自体はrubyで書かれていて、ダウンロードインデックス情報はformulaと呼ばれる
+ (formulaはレシピの意味。Cellarは貯蔵庫の意味)
+ brewで取得できるパッケージには2種類あり、
+ 1、予めビルドしたバイナリー(高速にインストールできる)
+ 2、生のソースコード(取得後ローカルでビルドする)
+ ビルドに使うコンパイラはclang
+ ~
+ *brewの初期設定
+ [[参考サイト:http://qiita.com/b4b4r07/items/6efebc2f3d1cbbd393fc]]
+ **javaインストール
+ まずはjavaがインストールされてるかを確認。javaが未インストールの場合は自動でインストーラが開く
+ #sh(bash){{
+ java -version
+ }}
+ ~
+ 
+ **Xcodeインストール
+ AppleストアからXcodeをインストールする。
+ [[Xcodeダウンロード:https://itunes.apple.com/jp/app/xcode/id497799835?mt=12]]
+ ついでにコマンドラインツールも入れる(gccなどが使えるようになる)
+ #sh(bash){{
+ xcode-select --install
+ }}
+ ~
+ 
+ **HomeBrewインストール
+ ターミナルからrubyでgithubからデータとってきてインストールするだけ
+ #sh(bash){{
+ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go/install)"
+ }}
+ ~
+ インストールしたあと、brew doctorを実行してみる。macportsが原因のエラーが出たら
+ [[brewインストール手順:http://qiita.com/b4b4r07/items/6efebc2f3d1cbbd393fc]]ここに従ってmacportを消す
+ 
+ *brewコマンド
+ -インストール済みパッケージの問題チェック
+ #sh(bash){{
+ brew doctor
+ }}
+ ~
+ 
+ -サーバー上に上がってるパッケージリスト(インデックス)の最新版を取ってくる
+ #sh(bash){{
+ brew update
+ }}
+ ~
+ 
+ -検索したいパッケージがあったら、searchしてみる。ローカルにあるインデックスリストから検索する。
+ #sh(bash){{
+ brew search <formula>
+ }}
+ ~
+ 
+ -未更新のパッケージを全て最新バージョンにする(pin)されてるものを除く
+ #sh(bash){{
+ brew upgrade
+ }}
+ ~
+ 
+ -一時的に、/usr/local/bin/内にある『パッケージ実体へのリンク』を消す/再リンクを貼る
+ #sh(bash){{
+ brew unlink <formula>
+ brew link <formula>
+ }}
+ ~
+ 
++-パッケージのformulaを手動で編集。インストールに使うリンクライブラリやダウンロード先を書き換えられる。
++#sh(bash){{
++brew edit <formula>
++}}
++~
++
+ -パッケージを指定してインストール。バイナリがある場合はバイナリの状態でパッケージを取ってくる
+ ただし--build-from-sourceフラグを付けると、ソースの状態でとってきて、ローカルでコンパイルからやり直す。
+ #sh(bash){{
+ brew install <formula>
+ }}
+ ~
+ 
+ -それぞれのパッケージごとの専用オプションを表示できる。例えば--with-python
+ #sh(bash){{
+ brew options <formula>
+ }}
+ ~
+ 
+ -アンインストール(どちらでも同じ) --forceフラグで全バージョンを削除
+ #sh(bash){{
+ brew uninstall <formula> --force
+ brew remove <formula>
+ }}
+ ~
+ 
+ -インストール済みパッケージ一覧
+ #sh(bash){{
+ brew list
+ }}
+ ~
+ 
+ -インストール済みパッケージのバージョン一覧
+ #sh(bash){{
+ brew list --versions
+ }}
+ ~
+ 
+ -インストール済みパッケージの格納先を表示
+ #sh(bash){{
+ brew --prefix <formula>
+ }}
+ ~
+ 
+ -対象パッケージのローカルとリモートの情報を全て表示
+ #sh(bash){{
+ brew info <formula>
+ }}
+ ~
+ 
+ -対象パッケージを、updateなどで更新されないように現在のバージョンに固定しておく
+ #sh(bash){{
+ brew pin <formula>
+ }}
+ ~
+ 
+ -対象パッケージをアップデートできるようにピンをはずす。(バグが修正された時などに使う)
+ #sh(bash){{
+ brew unpin <formula>
+ }}
+ ~
+ 
+ -brewはデフォルトで同じパッケージの更新版を何度もインストールするので、最新版以外削除したい時に使う。
+ #sh(bash){{
+ brew cleanup
+ }}
+ ~
+ 
+ -指定したパッケージのみの古いバージョンを削除(-nフラグで、何が消されるかのシミュレーション)
+ #sh(bash){{
+ brew cleanup <formula>
+ }}
+ ~
+ 
+ -GitHub上に上がってるものであれば、ユーザ名/リポジトリ名をタップすれば、それもbrewの管理対象にできる。
+ 必要なければuntapすれば良い
+ #sh(bash){{
+ brew tap <github_user_name>/<repository_name>
+ brew untap <github_user_name>/<repository_name>
+ }}
+ ~

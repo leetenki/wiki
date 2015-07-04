@@ -1,0 +1,100 @@
+[[OS/UNIX]]
+
+*man
+コマンドのマニュアルを表示するコマンド
+#sh(bash){{
+man <command>
+}}
+~
+
+*wget
+ダウンロードしたいファイルのアドレスを指定して、ローカルディレクトリに保存するだけ
+#sh(bash){{
+wget <ftp://address.tar.gz>
+}}
+~
+
+*ln
+シンボリックリンクや実体のコピーを作る
+#sh(bash){{
+#シンボリックリンクを貼る。リンクのほうにはファイル名の後ろに@がつく
+ln -s <source> <dst>
+}}
+~
+
+*make
+カレントにあるMakefile(もしくはmakefile)を読んでその手順に従ってビルド(コンパイル&リンク)する
+~
+-ビルドをする(デフォルト、all省略してもOK)
+#sh(bash){{
+make all
+}}
+~
+
+-jフラグで並列化コンパイル数値はジョブ数
+1コアで複数のジョブを実行できるので、8コアの場合は-j32とかにしても良い。
+#sh(bash){{
+make all -j8
+}}
+~
+
+-ビルド済のプログラムをインストールする
+#sh(bash){{
+make install
+}}
+~
+
+-不要になった中間ファイル(リンク用ファイル)などを全部削除
+#sh(bash){{
+make clean
+}}
+~
+
+
+*configure
+環境に合わせて、最適なMakefileを生成するコマンド
+なぜ必要かというと、Linux環境の違い(CentOS、GNU、FreeBSD等)やコンパイラの違い、インストール情況の違いで
+Makefileに書くべき処理が異なるから。例えばgccコンパイラを使っているのか、ccを使っているのか、
+これらの情報をまず自動で検出して、現在の環境にあった最適なMakefileを自動で生成する。
+このconfigureファイルは一般的にシェルスクリプトで書かれている。
+オリジナルの開発者はツールでconfigure生成している。
+~
+
+インストール先を指定。prefixを省略した場合は、デフォルトで/usr/local/にインストールされる
+#sh(bash){{
+./configure --prefix=<install_directory>
+sudo make install
+}}
+~
+
+
+*CMake
+Linuxにおいてはconfigureスクリプトの代わりになるツール。
+環境情報を自動取得して、Makefileを作ってくれる
+~
+
+第一引数に、必ずソースファイルが存在するディレクトリを指定する。
+カレントにMakefileを作ってバイナリ等を展開していくので、専用のbuildディレクトリを作っておく。
+成功すると、MakefileやCMakeCache.txtなどのファイルを生成してくれる。
+#sh(bash){{
+mkdir build
+cd build
+cmake ..
+make install
+}}
+~
+
+CMakeCache.txtはCMakeの実行時の情報を保存するためのものなので、
+失敗した場合は、bugfixした後、CMakeCache.txtを一度削除して再度cmakeする。
+#sh(bash){{
+rm CMakeCache.txt
+cmake ..
+}}
+~
+
+cmakeでCMakeCache.txtを生成する時、自動検出した環境情報を専用の変数に代入してCMakeCache.txtに書き込む
+それと同じような変数を手動で付け加えるには、-Dフラグで指定する。スペースは開けない。
+ここで指定した変数名が、cmakeで自動生成する変数名と衝突した場合は、指定した変数名が優先。
+#sh(bash){{
+cmake -D<var>=<value> ..
+}}

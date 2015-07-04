@@ -1,0 +1,14 @@
+-このページはサイトの説明を入れる為に用意されています。
+ 
+-*推奨環境
+-当サイトでは以下の環境で快適にご利用頂けます。
+-
+-|OS|ブラウザ|h
+-|Windows XP|InternetExplorer 6.0以降&br;InternetExplorer 7.0以降&br;InternetExplorer 8.0以降|
+-|Windows VISTA|InternetExplorer 7.0以降&br;InternetExplorer 8.0以降|
+-|Windows 7|InternetExplorer 8.0以降|
+-|Mac OS X|Safari 3.0以降&br;Firefox 3.0以降|
+-
+-*ブラウザの設定について
+-当サイトをご利用頂くには、ブラウザの設定でJavaScriptを''有効''に設定する必要がございます。JavaScriptを有効にしていない場合、ご利用頂けない機能がございます。
+-

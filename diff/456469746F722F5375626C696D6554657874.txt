@@ -1,0 +1,36 @@
+ [[Editor]]
+ #contents
+ 
+-*zen coding
++*zen codingとEmmet
++**zen codingとは
+ 高速にHTMLを書く方法
+ #sh(html){{
+ div.hoge
+ }}
+ と入力したあとに、タブを押せば、自動で
+ #sh(html){{
+ <div class="hoge"></div>
+ }}
+ に変換される。
+ ~
+ 
+ idの場合は、
+ #sh(html){{
+ div#hoge
+ }}
+ と書いてタブを押せば、
+ #sh(html){{
+ <div id="hoge"></div>
+ }}
+ になる。
++~
+ 
++
++**Emmetとは
++sublime text上のプラグイン。
++zen codingのパワーアップバージョンの機能がsublime上で使えるようになる。
++[[Emmetガイド:http://catcher-in-the-tech.net/2057/]]
++
++
++*自動インデント整形機能

@@ -1,0 +1,40 @@
++#contents
++
+ #sh(php){{
+ <php?
+ 	// ソースコード
+ 	echo 'Hello World';
+ 	echo 'SyntaxHighlighter!';
+ ?> 
+ }}
+ 
+ //コメント行
+ 
+ %%取り消し線%%
+ 
+ *重要1
+ **重要2
+ ***重要3
+ 
+ [[コマンドテスト]]
+ [[外部リンク:https://leetenki.azurewebsites.net/dena/]]
+ 
+ ''強調''
+ '''斜体'''
+ 
+ :定義|我が輩は猫である。
+ :定義|我が輩は犬である。
+ 
+ |a|b|c|
+ |a|b|c|
+ |a|b|c|
+ 
+ &color(#00ff00){緑色};
+ 
+ &color(#00ff00,#000000){黒背景};
+ 
+ &size(20){&color(#00ff00,#000000){サイズ20};};
+ 
+ 画像
+ #ref(https://www.google.com/images/srpr/logo11w.png,center,w30,h1000);
+ #ref(piano.jpg,center,30%);

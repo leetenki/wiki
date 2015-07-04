@@ -1,0 +1,37 @@
+#contents
+
+*近似直線
+#sh(python){{
+#coding: utf-8
+
+from matplotlib import pyplot
+import scipy
+raw_data = scipy.genfromtxt("web_traffic.tsv", delimiter="\t")
+
+time = raw_data[:,0]     #1ヶ月分の時間(743時間)
+access = raw_data[:,1]   #1ヶ月分のアクセス数(時間ごとの集計)
+
+#nanのフィールドを排除
+time = time[~scipy.isnan(access)]
+access = access[~scipy.isnan(access)];
+
+#データ可視化
+pyplot.scatter(time, access)
+pyplot.title("Web traffic over the last month")
+pyplot.xlabel("Time[hour]")
+pyplot.ylabel("Access/Hour")
+pyplot.grid()
+
+#(fitParam, residuals, rank, sv, rcond) = scipy.polyfit(time, access, 1, full=True);
+fitParam = scipy.polyfit(time, access, 1);
+
+func = scipy.poly1d(fitParam);
+def error(f, x, y):
+	return scipy.sum((f(x)-y)**2);
+print error(func, time, access);
+
+
+x = scipy.linspace(0, time[-1], 1000);
+pyplot.plot(x, func(x), linewidth=4);
+pyplot.show();
+}}

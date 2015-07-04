@@ -1,0 +1,9 @@
+ [[OS/Mac]]
+ 
+-**open
++*open
+ terminalからfinderを開きたい時に使う
+ #sh(bash){{
+ open .
+ }}
+ ~

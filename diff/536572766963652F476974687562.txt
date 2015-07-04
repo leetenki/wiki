@@ -1,0 +1,31 @@
+-[[Service]]
++[[Git]]
+ 
+ *GitHub概要
++[[GitHub公式サイト:https://github.com/]]
+ 無料のGithubだとpublicなリポジトリのみ許可される。誰でも参照可能。
+ 有料会員で7$/month払えば、5つの非公開リポジトリを持てる。
+ ~
+ 
+ *GitHub使用の流れ
+ １、GitHubで右上メニュからNew repositoryを作成
+ repository名を入力して、publicに設定すれば、リポジトリが作成される。
+ これはすなわち、サーバー上のGUIによるgit init --bare作業である。
+ #ref(create.png,left,100%);
+ ~
+ ここで作成されるリポジトリは、github.com/<user_name>/<repository_name>.git
+ になる。例えば、leetenkiアカウントがhoge.gitというリポジトリを作ったら、次のURLになる。
+ #sh(bash){{
+ https://github.com/leetenki/hoge.git
+ }}
+ 
+ ~
+ 
+ *GitHub Pagesとは
+ 1リポジトリに対して、1つの静的Webサイトが持てる。
+ 公開に設定したリポジトリを1つ作ってWeb載せればそれだけでオリジナルサイトになる。
+ その公開Webサイトに独自ドメインを振ったり、CSS&HTMLも自由に設定可能。
+ ユーザーページ：アカウント名で作成するページ。
+ プロジェクトページ：プロジェクトごとに作成するページ。
+ ~
+-

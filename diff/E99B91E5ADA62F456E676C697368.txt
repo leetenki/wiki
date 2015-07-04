@@ -1,0 +1,17 @@
+ [[FrontPage]]
+ 
+ |  prefix   |   接頭語                   |
+ |  prune   |   刈り取る(草刈り)    |
+ | synset   |  類似語のグループ    |
+ | authority |   権威、権限            |
+ | authorize|  権限を与える         |
+ | contemporary | 現代的な感覚、時代の流行を取り入れた感覚|
+-| essence | 物事の肝、真髄|
+-|collapsed|  崩壊している  |
+-|pseudo   |  fake、偽の    |
++| essence | 物事の肝、真髄 |
++|collapsed|  崩壊している   |
++|pseudo   |  fake、偽の     |
++|naive      |     素朴、幼稚な  |
++|geek       |   奇人、極端なエンジニア|
+ |||
