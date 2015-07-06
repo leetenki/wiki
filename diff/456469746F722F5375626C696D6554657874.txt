@@ -1,9 +1,24 @@
  [[Editor]]
  #contents
  
--*zen coding
-+*zen codingとEmmet
-+**zen codingとは
++*Indent設定
++View → Indentation → Tab Width: 4
++に設定変更すれば、タブの大きさが4になる。
++~
++
++*Key-Bind設定
++Sublime Text → Preferences → Key Bindings User
++を選択すればjsonの設定ファイルが開く。
++#sh(bash){{
++[
++	{"keys": ["super+shift+r"], "command": "reindent", "args": {"single_line": false } }
++]
++}}
++このようにkey-bindの設定を追加すれば、command + shift + rで自動インデントできる。
++~
++
+ *zen codingとEmmet
+ **zen codingとは
  高速にHTMLを書く方法
  #sh(html){{
  div.hoge
@@ -24,13 +39,13 @@
  <div id="hoge"></div>
  }}
  になる。
-+~
+ ~
  
-+
-+**Emmetとは
-+sublime text上のプラグイン。
-+zen codingのパワーアップバージョンの機能がsublime上で使えるようになる。
-+[[Emmetガイド:http://catcher-in-the-tech.net/2057/]]
-+
-+
-+*自動インデント整形機能
+ 
+ **Emmetとは
+ sublime text上のプラグイン。
+ zen codingのパワーアップバージョンの機能がsublime上で使えるようになる。
+ [[Emmetガイド:http://catcher-in-the-tech.net/2057/]]
+ 
+ 
+ *自動インデント整形機能

@@ -11,6 +11,9 @@ wget --keep-session-cookies --save-cookies=cookies.txt --post-data="session[emai
 
 wget --load-cookies cookies.txt -r -k -E  https://my.techacademy.jp/
 
+
+
+http://qiita.com/hina_yukimura/items/7ecf1d1ad863444fd820
 *utf-8とは、文字コードとは
 *html langの違い
 *RUN一回ごとにapache再起動してるんですか？

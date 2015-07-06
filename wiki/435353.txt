@@ -104,6 +104,37 @@ p:hover {
 }}
 ~
 
+**a:hover、active、visited疑似要素
+a:linkは未訪問のリンク
+a:visitedは訪問済みのリンク
+a:hoverはオンマウス
+a:activeは選択時
+値の text-decoration: none;はリンクのアンダーラインの有無
+#sh(css){{
+/* unvisited link */
+a:link {
+    text-decoration: none;
+    color: #FF0000;
+}
+
+/* visited link */
+a:visited {
+    text-decoration: none;
+    color: #00FF00;
+}
+
+/* mouse over link */
+a:hover {
+    color: #FF00FF;
+}
+
+/* selected link */
+a:active {
+    color: #0000FF;
+}
+}}
+~
+
 **before、after疑似要素
 beforeはその要素の直前に挿入する別のタグ(contentes)、afterはその要素の直後。
 元々の要素がブロックレベルならbeforeやafterで挿入する要素もブロックレベル。
@@ -117,6 +148,18 @@ p:before {
 p:after {
     content: "...ここまで";
     font-size:0.75em;
+}
+}}
+~
+
+**first-child疑似要素
+最初の要素にのみ適用する
+この場合、ulの中の最初のli要素にのみ適用される。
+#sh(css){{
+ul li:first-child {
+margin-left :0;
+padding-left: 0;
+border-left: 0;
 }
 }}
 ~
@@ -412,11 +455,51 @@ div.container {
 }}
 ~
 
+**cursor
+cssでカーソルの種類を変更
+[[カーソル種類一覧:http://www.htmq.com/style/cursor.shtml]]
+autoはブラウザが自動でカーソル変更(初期値)
+defaultは矢印。
+pointerは人差し指1本のリンククリック
+textは編集。
+#sh(css){{
+a:hover {
+    cursor: auto;
+    cursor: default;
+    cursor: pointer;
+    cursor: text;
+}
+}}
+~
+
+**user-select:none
+カーソルによる範囲選択を無効化する。
+#sh(css){{
+* {
+	user-select:none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+}
+}}
+~
+*センタリング
+CSSでは左右中央にセンタリングするのは楽。ブロックレベルもしくはインラインブロック要素を100%広げて(初期値)、
+text-align:centerを付ければ、内部の要素がセンタリングされる。
+もしくはblock(か inline-block)要素にwidthとheightを設定して、
+margin: autoをつければ、親に対してセンタリングされる。
+ただし、position: absoluteだと一固定なのでセンタリングされない。
+~
+
+上下のセンタリングはmargin-topを付ける以外方法ない。autoはできない。
+blockレベルもしくはinline-blockレベル要素に対して、margin-topを付ければ正しくセンタリングされる。
+※純粋なinlineだと常に左上詰めルールがあるので、センタリングできない。
 *CSS3新機能
 **@media
 メディアクエリー
 表示デバイスごとにスタイルシートを適用させる機能
-この場合、画面サイズが、最大768px以下になった時点で適用されはじめる。
+この場合、画面サイズが、最大768px以下になった時点で適用されはじめる。すなわちモバイルサイズにのみ適用
+同様にmin-width: 768pxと指定すれば、PCデバイスにのみ適用させられる。
 #sh(css){{
 @media (max-width: 768px) {
     body {

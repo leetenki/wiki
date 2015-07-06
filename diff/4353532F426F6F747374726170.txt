@@ -49,6 +49,7 @@
  ~
  
  *グリッドデザイン
+ [[一番わかりやすいグリッドデザイン解説:http://designup.jp/bootstrap3-beginner-91/]]
  グリッドデザイン全体を入れるためのcontainerのclassを作って、
  containerの中で各行ごとにrowのclassを作る。
  １つのrow(1行)の中で、col-{prefix}-{コラム数}を複数いれて、コラム数(セル数)が合計12個になれば良い。
@@ -402,7 +403,195 @@
  }}
  ~
  
+ *Carousel
+ 横にスライドする画像パネルを作りやすくした機能。
+ [[Bootstrap Sarousel:http://getbootstrap.com/javascript/]]からCarouselのソースをコピーしてくる。
+ ~
+ 
+ **基本ソース
+ data-intervalはスライドする間隔。(onmouseしてる時はスライドしない)
+ １つの<div class="item">〜</div>が1枚のスライド。動画、画像、キャプションなど好きに入れられる。
+ item activeになってる要素が現在画面中央に表示されてるもの。
+ ~
+ Indicatorsは中央にある小さい●○●●の部分。要素を増やしたら1つ追加する。
+ wrapper for slidesの部分は要素。画像を増やしたいならここに1枚追加すればOK
+ Controlsは←と→のやじるしボタン。いじらなくて良い。(矢印の画像を変えたい時にいじる)
+ #sh(html){{
+ <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="4000">
+     <!-- Indicators -->
+     <ol class="carousel-indicators">
+         <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+         <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+         <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+     </ol>
+ 
+     <!-- Wrapper for slides -->
+     <div class="carousel-inner" role="listbox">
+ 
+         <div class="item active">
+             <video autoplay loop>
+                 <source src="./assets/webm/movie2.webm" type="video/webm">
+                 Your browser does not support the video tag.
+             </video> 
+            <div class="carousel-caption">
+                 ...
+             </div>
+         </div>
+ 
+         <div class="item" id="myCarousel">
+             <video autoplay loop>
+                 <source src="./assets/webm/movie1.webm" type="video/webm">
+                 Your browser does not support the video tag.
+             </video>
+             <div class="carousel-caption">
+                 ...
+             </div>
+         </div>
+ 
+         <div class="item">
+             <video autoplay loop>
+                 <source src="./assets/webm/movie3.webm" type="video/webm">
+                 Your browser does not support the video tag.
+             </video>
+             <div class="carousel-caption">
+                 ...
+             </div>
+         </div>
+     </div>
+ 
+     <!-- Controls -->
+     <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+         <span class="sr-only">Previous</span>
+     </a>
+     <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+         <span class="sr-only">Next</span>
+     </a>
+ </div>
+ }}
+ ~
+ 
+ **javascript操作
+ pauseで一時停止。
+ prevで次のスライドへ。
+ nextで直前のスライドへ。
+ carousel(1)でインデックス1のスライドへ移動。
+ #sh(javascript){{
+ var slides = $("#carousel-example-generic");
+ slides.carousel("pause");
+ slides.carousel("prev");
+ slides.carousel("next");
+ slides.carousel(1);
+ }}
+ ~
+ 
+ **onイベント
+ javascriptで制御する時は、
+ slide.bs.carouselイベントがスライド呼び出し直前に発動する。
+ slid.bs.carouselイベントが、スライド呼び出し完了したら発動する。
+ 現在のアイテムと直後のアイテムは次のように取得する。
+ #sh(javascript){{
+ $('#carousel-example-generic').on("slide.bs.carousel", function(e){
+ 	currentItem = $('#carousel-example-generic .carousel-inner .item.active')[0];
+ 	nextItem = e.relatedTarget;
+ })
+ }}
+ 
+ **css
+ item内部の画像やビデオなどの幅を100%に引き延ばすか、中央に調整すれば、見栄え良くなる。
+ #sh(css){{
+ .carousel-inner video {
+ 	width: 100%
+ }
+ }}
+ ~
+ 
+ *Modal window
+ モーダルウィンドウとは、ある親ウィンドウの小窓として生成されるもの。
+ ユーザーが小窓に対して適切な入力を行ったあと、初めて親ウィンドウに制御を返すというもの。
+ ~
+ 
++1、まずはHTMLのformを作っておく。このformは完全invisibleなので通常は見える事はない。
++#sh(html){{
++<!--*************************** Email form ***************************-->
++<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
++    <div class="modal-dialog" role="document">
++        <div class="modal-content">
++            <div class="modal-header">
++                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
++                <h4 class="modal-title" id="exampleModalLabel">Leave me a message</h4>
++            </div>
++
++            <div class="modal-body">
++                <form>
++                    <div class="form-group">
++                        <label for="email-text" class="control-label"><i class="fa fa-envelope"></i>　Email:</label>
++                        <input type="text" class="form-control" id="email-text" placeholder="Enter your email address...">
++                    </div>
++                    <div class="form-group">
++                        <label for="message-text" class="control-label"><li class="fa fa-heart-o"></li>　Message:</label>
++                        <textarea class="form-control" id="message-text"></textarea>
++                    </div>
++                </form>
++            </div>
++
++            <div class="modal-footer">
++                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
++                <button type="button" class="btn btn-primary" id="submit">Send</button>
++            </div>
++        </div>
++    </div>
++</div>
++}}
+ ~
++
++2、Modal windowを開くbuttonを作っておく
++data-targetを、さっき作ったformのIDにすればOK
++#sh(html){{
++<!-- button -->
++<div class="button-box">
++    <p>Leave a message</p>
++    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Leave a message</button>
++</div>
++}}
++~
++
++3、ボタンのレスポンシブ化のためにCSSを編集しておく
++#sh(css){{
++.modal-footer button.btn {
++	text-align: center;
++	margin-top: 10px;
++	width: 190px;
++}
++}}
++~
++
++4、javascriptでボタンの制御をする。
++HTMLで作ったModal window呼び出しボタンの、whateverプロパティの値を読んで、
++form生成と同時にform内に代入する処理をここで行ってる。この処理はなくてもOK
++#sh(javascript){{
++$('#exampleModal').on('show.bs.modal', function (event) {
++    var button = $(event.relatedTarget) // Button that triggered the modal
++    var recipient = button.data('whatever') // Extract info from data-* attributes
++    var modal = $(this)
++
++    modal.find('.modal-title').text('New message to ' + recipient)
++    modal.find('.modal-body input').val(recipient)
++});
++}}
++~
++
++最後にEvent listening処理を書く。
++#sh(javascript){{
++$('button#submit').click(function(e){
++	var email = $("#email-text")[0].value;
++	var message = $("#message-text")[0].value;
++	alert(email + "," + message);
++	$('#exampleModal').modal('hide');
++});
++}}
++~
  *Bootstrap2 ⇒ Bootstrap3の変更点
--#ref(change.png,left,80%);
-+Ver2ではrow-fluidとrowを使い分けていたのが、Ver3ではrowに統一された。
-+#ref(change.png,left,70%);
+ Ver2ではrow-fluidとrowを使い分けていたのが、Ver3ではrowに統一された。
+ #ref(change.png,left,70%);

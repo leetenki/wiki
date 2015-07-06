@@ -33,29 +33,8 @@ JavascriptとHTML5のみで構成されてる。Flashなし、プラグインな
 ~
 
 *Cloud9
-[[Cloud9公式:https://c9.io/]]
-アプリケーション開発、データベースなどをクラウド環境で利用できるサービス。
-オンラインのIDE。GitHubやHerokuともスムーズに連携可能。
-Gitアカウントでログイン可能。Docker Ubuntu containerが裏で動いてる。
-Vim/Emacs/Sublimeモードを切り替えられる。
-イメージのGUIエディタ付き。
-Built-In Terminalが使える。デバッガーが使える。
+[[Service/Cloud9]]
 ~
-
-**使い方
-ログインして、Workspace作成 → 名前(hoge)を決めてプロジェクト種類選択 →  CreateProjectすれば
-勝手にUbuntuのVMが1つ作られて、そこの/home/ubuntu/workspace/で作業開始する。
-このディレクトリがweb-rootになり、ここにindex.htmlファイルを配置すれば、
-https://hoge-leetenki.c9.io/index.htmlからアクセスできる。
-ちなみにこのVMのスペックは低い。(1 CPU、512MB RAM、1GB HDD)
-使い方はWindows Azure monacoとほぼ同じ。
-D&Dでアップロードできる。
-Webアプリを閲覧したい時はRunボタンでApache起動する。
-ワークスペースを他人と共有したり、共同プログラミングも可能。右上のShare workspaceでシェアするURLを表示
-他人が編集URLにアクセスすると、Notificationにドアノックしてる人が表示される。許可すれば編集できる。
-常に共同編集する場合は、Share workspaceオプションで、Invite Peopleの名前を入れておけば良い。
-~
-
 *Heroku
 [[Heroku公式:https://www.heroku.com/]]
 [[Heroku紹介:http://blog.ruedap.com/2011/04/29/ruby-heroku-web-app-development-tips-1]]

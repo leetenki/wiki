@@ -607,18 +607,18 @@
  ~
  
  
-+*Git-credential(認証ヘルパー)
-+[[Git認証ヘルパー:https://mistymagich.wordpress.com/2013/10/07/git-credential-helper%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6http%E8%B6%8A%E3%81%97%E3%81%A7%E8%AA%8D%E8%A8%BC%E3%81%8C%E3%81%8B%E3%81%8B%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%83%AA%E3%83%9D%E3%82%B8/]]
-+[[Git認証Q&A:http://www.backlog.jp/git-guide/reference/trouble-shooting.html]]
-+Git1.7以上から利用可能になった機能。git clone等で認証ページにアクセスする時、初回パスワードを入力すれば、
-+認証ヘルパーがそのパスワードを内部で記憶してくれるので、2度目以降はパスワード認証が必要なくなる。
-+brewでgitをインストールするとデフォでパッケージに入ってる。
-+#sh(bash){{
-+git help -a|grep credential-
-+}}
-+このコマンドを叩けば、認証ヘルパーが入ってるか確認できる。
-+~
-+
+ *Git-credential(認証ヘルパー)
+ [[Git認証ヘルパー:https://mistymagich.wordpress.com/2013/10/07/git-credential-helper%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6http%E8%B6%8A%E3%81%97%E3%81%A7%E8%AA%8D%E8%A8%BC%E3%81%8C%E3%81%8B%E3%81%8B%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%83%AA%E3%83%9D%E3%82%B8/]]
+ [[Git認証Q&A:http://www.backlog.jp/git-guide/reference/trouble-shooting.html]]
+ Git1.7以上から利用可能になった機能。git clone等で認証ページにアクセスする時、初回パスワードを入力すれば、
+ 認証ヘルパーがそのパスワードを内部で記憶してくれるので、2度目以降はパスワード認証が必要なくなる。
+ brewでgitをインストールするとデフォでパッケージに入ってる。
+ #sh(bash){{
+ git help -a|grep credential-
+ }}
+ このコマンドを叩けば、認証ヘルパーが入ってるか確認できる。
+ ~
+ 
  *Git チートシート
  **新規作成
  #sh(bash){{
@@ -707,3 +707,19 @@
  git revert
  git rebase
  }}
+ ~
+ 
+ 
+ *GitHub
+ [[Service/Github]]
+ 
+ *submodule
++[[サブモジュール解説サイト:https://git-scm.com/book/ja/v1/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE%E3%81%AA%E3%83%84%E3%83%BC%E3%83%AB-%E3%82%B5%E3%83%96%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB]]
++
+ Github上に公開されてるthreejsなどの外部リポジトリを、ローカルリポジトリの一部に取り込む方法。
+ ただcloneするだけだとconflictが起きる可能性があるので、submoduleを使う。
+ #sh(bash){{
+ git submodule add git://github.com/chneukirchen/○○.git local_module
+ }}
+ ~
+ とする事で、conflictの起きないローカルモジュールとしてcloneしてきてくれる。

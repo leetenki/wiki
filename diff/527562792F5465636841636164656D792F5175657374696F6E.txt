@@ -11,6 +11,9 @@
  
  wget --load-cookies cookies.txt -r -k -E  https://my.techacademy.jp/
  
++
++
++http://qiita.com/hina_yukimura/items/7ecf1d1ad863444fd820
  *utf-8とは、文字コードとは
  *html langの違い
  *RUN一回ごとにapache再起動してるんですか？
@@ -22,16 +25,15 @@
  *11.5 マウスオーパーになってる
  
  *session[]のカッコってなに？
-+ruby on reils特有の書き方らしい。postやget送る時もそのままsession[name]=leeみたいに送ってるらしい。
+ ruby on reils特有の書き方らしい。postやget送る時もそのままsession[name]=leeみたいに送ってるらしい。
  
-+
-+reils
-+開発速度重視
-+
-+
-+地図のAPIを使う。
-+reilsAPIを使ったサービス
-+
-+を考えながらオリジナルのアプリケーション
-+node.js
-+
+ 
+ reils
+ 開発速度重視
+ 
+ 
+ 地図のAPIを使う。
+ reilsAPIを使ったサービス
+ 
+ を考えながらオリジナルのアプリケーション
+ node.js

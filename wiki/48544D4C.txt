@@ -24,6 +24,17 @@ HyperTextMarkupLanguageの略
 <!DOCTYPE HTML>
 }}
 HTMLだよ〜という宣言。HTML5から楽になった。
+クライアントのブラウザがあるファイルを受け取ったあと、この<!DOCTYPE HTML>の記述を最初に見つけると、
+以降をhtmlドキュメントとして解釈する。
+~
+
+**html lang
+この記述は主に検索エンジン対策、ブラウザの翻訳機能、もしくはブラウザの音声読み上げ機能が利用する。
+metaで文字コードを書いただけだと、具体的にどの国の言葉まではわからないので、この記述はお作法として必要。
+~
+
+**charset
+文字コード。Shift_JIS、UTF-8など、utf-8推奨。[[雑学/IT/文字コード]]
 ~
 
 **要素
@@ -210,6 +221,38 @@ aタグで囲まれた中にimgを入れたり、リンクのラベルはなん�
 }}
 ~
 
+**a:hover、active、visited疑似要素
+CSSでaタグを装飾する時、
+a:linkは未訪問のリンク
+a:visitedは訪問済みのリンク
+a:hoverはオンマウス
+a:activeは選択時
+値の text-decoration: none;はリンクのアンダーラインの有無
+#sh(css){{
+/* unvisited link */
+a:link {
+    text-decoration: none;
+    color: #FF0000;
+}
+
+/* visited link */
+a:visited {
+    text-decoration: none;
+    color: #00FF00;
+}
+
+/* mouse over link */
+a:hover {
+    color: #FF00FF;
+}
+
+/* selected link */
+a:active {
+    color: #0000FF;
+}
+}}
+~
+
 **img
 画像を貼付けるタグ。srcはソース、alt(alternate)は画像が表示されない時の代用の文字列
 #sh(html){{
@@ -296,7 +339,6 @@ HTMLの論理的なまとまり。CSSで扱いやすい他、人間もソース�
 <section>汎用要素、内容が漠然としてる時に使う</section>
 }}
 ~
-
 *要素
 **class、id
 CSSで操作したり、javascriptで操作するためのラベル
@@ -357,7 +399,7 @@ name=選択されてるoptionのvalue、の形式で送信される。デフォ�
 calsは横の1行の文字数。
 rowsは行数
 maxlengthは入力できる最大文字数
-placeholderはデフォルトの補助テキスト
+placeholderはデフォルトの補助テキスト。input系やtextareaで使える。
 #sh(html){{
 <textarea name="textarea1" cols=100 rows=3 maxlength=100 placeholder="default"></textarea>
 }}
@@ -399,3 +441,25 @@ bodyの末尾のほうが先にHTMLが全部ロードされるので、Webサイ
 |インライン要素|span、strong、a、button、img、input、label|
 
 ~
+
+
+*HTML5
+**videoタグ
+autoplayで自動再生
+loopで繰り返し
+controlsでコントロールボタンの表示
+#sh(html){{
+<video id="myVideo" autoplay loop controls>
+    <source src="./assets/webm/movie2.webm" type="video/webm">
+    Your browser does not support the video tag.
+</video> 
+}}
+~
+
+javascriptで音量調整。
+#sh(javascript){{
+window.onload = function() {
+	video = document.getElementById("myVideo");
+	video.volume = 0;
+}
+}}

@@ -1,4 +1,4 @@
-[[OS/UNIX]]
+#contents
 
 *man
 コマンドのマニュアルを表示するコマンド
@@ -50,7 +50,66 @@ make clean
 }}
 ~
 
+*ssh-keygen
+SSH接続で利用する秘密鍵と公開鍵を生成、管理するコマンド
+**~/.ssh/
+#sh(bash){{
+ssh-keygen -t rsa
+}}
+でras typeの秘密鍵と公開鍵が作れる。なに聞かれてもEnter押しておけば良い。
+鍵の保存場所は~/.ssh/なので、そこいけば確認できる。
+~
 
+**~/.ssh/config
+[[config設定:http://superbrothers.hatenablog.com/entry/20090730/1248971671]]
+ホストごとに、1つのssh鍵とユーザ名を別々で使い分ける場合に必要。 
+まずはrsaファイルとrsa.pubファイルの名前を変える。
+同じ名前にする必要はない。git_publicやgit_privateのような名前でも良い。
+publicはサーバー側に登録しておくファイルなので、config設定ではサーバー認証時に使うprivate鍵のみ記述する。
+~
+configファイルをエディタで編集する。
+#sh(bash){{
+Host hoge.in
+    HostName        hoge.in
+    Port            22222
+    IdentityFile    ~/.ssh/identity
+    User            hoge_use
+    Protocol        1
+}}
+~
+|Host | 次のHostキーワードが現れるまでを１つのssh設定とする。|
+|Port  | 接続するポート番号。省略可 |
+| IdentityFile | そのホストに使用する秘密鍵 |
+| User   |     ユーザー名  |
+|Protocol | sshのバージョン(1か2)を指定|
+~
+Hostを1つ設定しておけば
+#sh(bash){{
+ssh Host名
+}}
+でアクセスできるようになる。gitなども可能。
+~
+
+**finger print
+通常、サーバイサイドに公開鍵を預けておいて、ローカルの秘密鍵を使ってログインするが、
+初回アクセス時に、サーバーサイドの情報(公開鍵やIPなど)をローカルに保存する。
+この情報のまとまりをfinger printと言う。この『サーバーのfinger print』の情報をローカルで持っておく事によって、
+2回目以降で仮にサーバーが偽者にすり替わっていても、アクセスする時に気づく。
+指紋が異なる別人のサーバーだよと知らせてくれる。
+~
+finger printは1つの公開鍵に対して1つ存在する。サーバーの指紋について確認したい時は、
+#sh(bash){{
+ssh-keygen -l -f ~/.ssh/rsa_key.pub
+}}
+を叩けば確認できる。もしくは、直接known_hostsを開いても確認できる。
+#sh(bash){{
+cat ~/.ssh/known_hosts
+}}
+
+**key_read: uudecode failed
+サーバー上に設定したpublic keyにスペースとか改行が入ってるとこの警告が表示される。
+公開鍵を設定しなおせばなおる
+~
 *configure
 環境に合わせて、最適なMakefileを生成するコマンド
 なぜ必要かというと、Linux環境の違い(CentOS、GNU、FreeBSD等)やコンパイラの違い、インストール情況の違いで

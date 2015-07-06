@@ -1,3 +1,6 @@
+#contents
+
+*Gitの使い方
 [[Git]]
 
 *GitHub概要
@@ -20,10 +23,113 @@ https://github.com/leetenki/hoge.git
 
 ~
 
+*GitHubのログイン認証
+GitHubでクローンする時やfetch、pushする時はユーザー認証が必要。
+cloneやpullの場合、GitHubユーザーである必要がある。
+pushする場合は、GitHubユーザーであり、かつpush権限が必要(内部で自動判別される)
+このユーザー認証は、HTTPSを通じたパスワード認証とSSHを通じた公開鍵認証のどちらでも可能
+#ref(gitclone.png,left,100%);
+~
+
+**HTTPS
+#sh(bash){{
+https://github.com/leetenki/leetenki.github.io.git
+}}
+HTTPS認証ではこのURLが使われる。
+ローカルのgitがver1.8以上なら、credential-helperが使えるので、
+初回のパスワード認証のみで、2回目以降から必要なくなる。
+~
+
+**SSH
+[[GitHubへSSH公開鍵を登録:http://monsat.hatenablog.com/entry/generating-ssh-keys-for-github]]
+#sh(bash){{
+git@github.com:leetenki/leetenki.github.io.git
+}}
+SSH認証ではこのURLが使われる
+GitHubへ公開鍵を登録しておけば、HTTPS通信でパスワードを手動入力する必要もなく、
+自動でfinger printも確認してくれるので、偽物もサーバーも防げるので安全。
+~
+１、ssh-keygenコマンドで~/.ssh/に秘密鍵と公開鍵のペアを作っておく。
+２、rsaファイルとrsa.pubの名前を変えておく(git_privateやgit_public)
+３、~/.ssh/configを開いて、サーバー情報と認証時に使うprivate鍵のファイル場所を登録しておく。
+#sh(bash){{
+Host github.com
+	HostName	github.com
+	IdentityFile ~/.ssh/git_private
+	User	git
+}}
+4、サーバー側でsetting ⇒ SSH Keysを開いて、public鍵をコピーしてそこに貼付ける。
+5、あとは git clone git@github.com:leetenki/○○.git でSSHを使ってくローン可能。
+*リポジトリ作成
+**GitHub上でInitial commit → clone
+GitHubでnew repository作る時にREADMEを作るチェックしておけば、
+最初の1回分commitされた状態になる。これをローカルにcloneして来れば同期完了する。
+#sh(bash){{
+git clone https://github.com/leetenki/○○.git
+git touch README.md
+git add README.md
+git commit -m "first commit"
+git push origin master
+}}
+~
+
+**ローカルプロジェクトをGitHubアップロード
+ローカルで既にGit管理しているプロジェクト、もしくは管理してないプロジェクトがある場合、
+それをGitで初期化して、GitHubに上げて同期する事も可能。GitHub上でnew repositoryする時に、
+READMEのチェックを外して空のリポジトリを作る。そのリポジトリのURLを手動でローカルリポジトリに追加して、
+pushすれば同期完了する。(名前はoriginでも、GitHubでも好きなもので良い)
+#sh(bash){{
+git init
+git add .
+git commit -m "Initial commit"
+
+git remote add GitHub https://github.com/leetenki/○○.git
+git push origin master
+}}
+~
+
+
 *GitHub Pagesとは
+[[Git Pagesの作り方:https://pages.github.com/]]
 1リポジトリに対して、1つの静的Webサイトが持てる。
 公開に設定したリポジトリを1つ作ってWeb載せればそれだけでオリジナルサイトになる。
 その公開Webサイトに独自ドメインを振ったり、CSS&HTMLも自由に設定可能。
 ユーザーページ：アカウント名で作成するページ。
 プロジェクトページ：プロジェクトごとに作成するページ。
 ~
+1、まずはGitHubへ行って、new repositoryを作る。
+この時リポジトリ名は必ず'''username'''/'''username'''.github.ioにする。
+~
+2、ローカルにクローンしてくる。
+#sh(bash){{
+git clone https://github.com/username/username.github.io
+}}
+~
+3、クローンしたディレクトリで、index.htmlを作る
+#sh(bash){{
+cd username.github.io
+echo "Hello World" > index.html
+}}
+~
+4、リモートにpushすればWebサイトが反映される。
+#sh(bash){{
+git add --all
+git commit -m "Initial commit"
+git push -u origin master
+}}
+~
+5、http://'''username'''.github.io
+へアクセスすれば静的Webサイトを表示できる。
+~
+
+
+*Submodule
+Github上に公開されてるthreejsなどの外部リポジトリを、ローカルリポジトリの一部に取り込む方法。
+ただcloneするだけだとconflictが起きる可能性があるので、submoduleを使う。
+[[サブモジュール解説サイト:https://git-scm.com/book/ja/v1/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE%E3%81%AA%E3%83%84%E3%83%BC%E3%83%AB-%E3%82%B5%E3%83%96%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB]]
+
+#sh(bash){{
+git submodule add git://github.com/chneukirchen/○○.git local_module
+}}
+~
+とする事で、conflictの起きないローカルモジュールとしてcloneしてきてくれる。

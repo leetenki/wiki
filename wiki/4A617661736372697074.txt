@@ -1,0 +1,38 @@
+[[CSS/Bootstrap]]
+
+#contents
+
+*SetInterval、clearInterval
+SetInterval(関数, ミリ秒, 引数, 引数);  でミリ秒ごとに実行する。
+clearInterval(setIntervalハンドラ);  でインターバルを消す。
+
+
+**通常の使い方
+#sh(javascript){{
+var handler;
+function hoge(arg) {
+	arg.value += 0.1;
+	if(arg.value >= 1) {
+		arg.value = 1;
+		clearInterval(hoge);
+	}
+};
+handler = setInterval(hoge, 1000, arg);
+}}
+~
+
+
+**自分の中で自分を消す
+
+#sh(javascript){{
+(function() {
+	var handler = setInterval(function(arg) {
+		arg.value -= 0.1;
+		if(arg.value <= 0) {
+			clearInterval(handler);
+			arg.value = 0;
+		} 
+	}, 1000, arg);	
+})();
+}}
+~

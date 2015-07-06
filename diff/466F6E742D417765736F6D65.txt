@@ -1,0 +1,35 @@
+ [[HTML]]
+ 
+ *Font-Awesomeとは
+ TwitterやFacebookのアイコン、now loadingのアイコンなど、
+ 汎用のアイコンを画像ではなく、Webフォントのテキスト文字として表示してくれる機能。
+ [[Font Awesome公式:http://fortawesome.github.io/Font-Awesome/]]
+ ~
+ 
+ #sh(html){{
+ <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css"/>
+ }}
+ で専用のスタイルシートにリンクしておけば、 
+ #sh(html){{
+ <i class="fa fa-twitter-square fa-4x"></i>
+ }}
+ と指定するだけでTwitterの画像がテキストとしてWebページ内に埋め込める。
+ この4xという指定は4倍するの意。だいたい5xまで用意されてる。
+ ~
+ 
++#sh(html){{
++// Email
++<i class="fa fa-envelope"></i>
++
++// ハート
++<li class="fa fa-heart"></li>
++
++// ハート(色反転)
++<li class="fa fa-heart-o"></li>
++
++// Twitter
++<i class="fa fa-twitter"></i>
++
++// Facebook
++<i class="fa fa-facebook"></i>
++}}

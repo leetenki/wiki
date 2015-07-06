@@ -1,0 +1,20 @@
+#contents
+
+*Cloud9とは
+[[Cloud9アカウント:https://c9.io/leetenki]]
+アプリケーション開発、データベースなどをクラウド環境で利用できるサービス。
+オンラインのIDE。GitHubやHerokuともスムーズに連携可能。
+Gitアカウントでログイン可能。Docker Ubuntu containerが裏で動いてる。
+Vim/Emacs/Sublimeモードを切り替えられる。
+イメージのGUIエディタ付き。
+Built-In Terminalが使える。デバッガーが使える
+~
+
+*タブ画面分割
+編集画面で、別のタブ開いて、そのタブを掴んで画面左側にドラッグすれば自動で画面分割される。
+~
+
+*ターミナル
+Window → new terminal
+もしくはタブの[+]押して→ new terminal
+でターミナル開ける。

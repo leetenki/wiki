@@ -1,0 +1,5 @@
+-
++*JSfiddleとは
++[[JSfiddle公式:https://jsfiddle.net/]]
++リアルタイムにjavascriptを実行してテストができるオンラインJSエディタ
++jQueryの公式バグレポートなどでもよく使われる。

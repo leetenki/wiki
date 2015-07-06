@@ -1,8 +1,16 @@
-[[OS/Mac]]
+#contents
 
 *open
 terminalからfinderを開きたい時に使う
 #sh(bash){{
 open .
+}}
+~
+
+*pbcopy、pbpaste
+コマンドラインから、テキストをPaste Board(Clip Board)にコピーするコマンド。
+pbpasteを使えばコピーした内容をコマンドラインに貼付けられる。
+#sh(bash){{
+pbcopy < README.txt
 }}
 ~
